@@ -478,8 +478,7 @@ function renderRosterTable() {
           <th class="cell-center" style="min-width:45px;">숙박</th>
           <th class="cell-center" style="min-width:65px;">24일만찬</th>
           <th class="cell-center" style="min-width:45px;">족구</th>
-          <th class="cell-center" style="min-width:65px;">축구(남)</th>
-          <th class="cell-center" style="min-width:65px;">축구(여)</th>
+          <th class="cell-center" style="min-width:55px;">축구</th>
           <th class="cell-center" style="min-width:60px;">배드민턴</th>
           <th style="min-width:120px;">비고</th>
           <th class="cell-center" style="min-width:45px;">삭제</th>
@@ -503,8 +502,7 @@ function renderRosterTable() {
             <td class="cell-center"><input type="checkbox" ${p.stay ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'stay')"></td>
             <td class="cell-center"><input type="checkbox" ${p.dinner ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'dinner')"></td>
             <td class="cell-center"><input type="checkbox" ${p.jokgu ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'jokgu')"></td>
-            <td class="cell-center"><input type="checkbox" ${p.soccerM ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'soccerM')"></td>
-            <td class="cell-center"><input type="checkbox" ${p.soccerW ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'soccerW')"></td>
+            <td class="cell-center"><input type="checkbox" ${p.soccer || p.soccerM ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'soccer')"></td>
             <td class="cell-center"><input type="checkbox" ${p.badminton ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'badminton')"></td>
             <td>
               <input type="text" class="cell-direct-input" style="font-size:12px; color:var(--color-ink-muted);" value="${escapeHtml(p.note || '')}" placeholder="비고 입력" oninput="updatePlayerDirect('${p.id}', 'note', this.value)">
@@ -514,7 +512,7 @@ function renderRosterTable() {
             </td>
           </tr>
         `).join("")}
-        ${filteredPlayers.length === 0 ? `<tr><td colspan="13" class="cell-center" style="padding:24px; color:var(--color-ink-muted);">${currentCategoryFilter === 'duplicate' ? '중복된 이름의 선수가 없습니다. 모든 이름이 고유합니다. 🎉' : '등록된 선수가 없습니다. \'선수 추가\' 버튼을 눌러 추가하세요.'}</td></tr>` : ''}
+        ${filteredPlayers.length === 0 ? `<tr><td colspan="12" class="cell-center" style="padding:24px; color:var(--color-ink-muted);">${currentCategoryFilter === 'duplicate' ? '중복된 이름의 선수가 없습니다. 모든 이름이 고유합니다. 🎉' : '등록된 선수가 없습니다. \'선수 추가\' 버튼을 눌러 추가하세요.'}</td></tr>` : ''}
       </tbody>
     `;
   } else if (currentCategoryFilter === "soccer") {

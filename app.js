@@ -125,8 +125,57 @@ let currentCategoryFilter = "all";
 let currentBracketSport = "jokgu";
 let currentSortField = null;
 let currentSortDir = "asc";
+let currentDiningFilterDate = "all";
 let playerDataStore = {};
 let bracketsDataStore = {};
+let diningPlacesDataStore = [];
+
+const INITIAL_DINING_PLACES = [
+  {
+    id: "d1",
+    date: "10.24",
+    dateLabel: "10월 24일(토)",
+    mealType: "석식 만찬",
+    name: "강원대 삼척캠퍼스 대운동장 연회장",
+    address: "강원 삼척시 중앙로 346 강원대학교 삼척캠퍼스",
+    phone: "033-570-7114",
+    note: "개회식 및 족구 경기 종료 후 공식 석식 만찬 장소입니다.",
+    category: "공식만찬"
+  },
+  {
+    id: "d2",
+    date: "10.24",
+    dateLabel: "10월 24일(토)",
+    mealType: "석식 모임",
+    name: "삼척 항구 회센터 / 쏠비치 인근 구역",
+    address: "강원 삼척시 수로부인길 453",
+    phone: "033-570-0000",
+    note: "지회별 자체 단체 회식 및 교류 모임 구역입니다.",
+    category: "자체모임"
+  },
+  {
+    id: "d3",
+    date: "10.25",
+    dateLabel: "10월 25일(일)",
+    mealType: "중식",
+    name: "삼척복합체육공원 구내식당 / 정식당",
+    address: "강원 삼척시 교동 산28-1",
+    phone: "033-570-3900",
+    note: "축구 참가 선수단 및 임원 중식 식사 제공 장소 (12:30~13:30)",
+    category: "선수단중식"
+  },
+  {
+    id: "d4",
+    date: "10.25",
+    dateLabel: "10월 25일(일)",
+    mealType: "중식",
+    name: "진주초등학교 체육관 휴게실",
+    address: "강원 삼척시 진주로 45",
+    phone: "033-573-2283",
+    note: "배드민턴 참가 선수단 도시락 제공 및 휴식 구역 (12:30~13:30)",
+    category: "선수단중식"
+  }
+];
 
 // Load State from LocalStorage
 function initStore() {
@@ -154,6 +203,27 @@ function initStore() {
     bracketsDataStore = INITIAL_BRACKETS_DATA;
     saveBracketsStore();
   }
+
+  initDiningStore();
+}
+
+function initDiningStore() {
+  const savedDining = localStorage.getItem("GANGWON_DINING_STORE_V1");
+  if (savedDining) {
+    try {
+      diningPlacesDataStore = JSON.parse(savedDining);
+    } catch(e) {
+      diningPlacesDataStore = INITIAL_DINING_PLACES;
+    }
+  } else {
+    diningPlacesDataStore = INITIAL_DINING_PLACES;
+    saveDiningStore();
+  }
+}
+
+function saveDiningStore() {
+  localStorage.setItem("GANGWON_DINING_STORE_V1", JSON.stringify(diningPlacesDataStore));
+}
 }
 
 function saveStore() {
@@ -180,6 +250,7 @@ function switchTab(tabId) {
 
   if (tabId === "roster") renderRosterPage();
   if (tabId === "brackets") renderBracketsPage();
+  if (tabId === "venues") renderDiningPlaces(currentDiningFilterDate);
 }
 
 // 4. D-Day Countdown Calculation
@@ -1012,9 +1083,124 @@ function updateMatchScoreDirect(matchId, teamIndex, value) {
   renderBracketsPage();
 }
 
-// 10. App Initialization on DOM Loaded
+// 10. Dining Venues Management Logic
+function filterDiningPlaces(dateFilter) {
+  currentDiningFilterDate = dateFilter;
+  renderDiningPlaces(dateFilter);
+}
+
+function renderDiningPlaces(filterDate = 'all') {
+  const area = document.getElementById("dining-places-render-area");
+  if (!area) return;
+
+  const btnAll = document.getElementById("dining-btn-all");
+  const btn24 = document.getElementById("dining-btn-24");
+  const btn25 = document.getElementById("dining-btn-25");
+  if (btnAll) btnAll.classList.toggle("active", filterDate === "all");
+  if (btn24) btn24.classList.toggle("active", filterDate === "10.24");
+  if (btn25) btn25.classList.toggle("active", filterDate === "10.25");
+
+  let list = diningPlacesDataStore || [];
+  if (filterDate !== "all") {
+    list = list.filter(d => d.date === filterDate);
+  }
+
+  if (list.length === 0) {
+    area.innerHTML = `
+      <div style="grid-column:1/-1; text-align:center; padding:40px; background:var(--color-surface); border-radius:var(--radius-md); color:var(--color-ink-muted);">
+        <p style="font-size:15px; margin-bottom:8px;">등록된 식사 장소가 없습니다.</p>
+        <span style="font-size:12px;">오른쪽 상단의 '식사 장소 추가' 버튼을 눌러 10.24(토) 또는 10.25(일) 식사 장소를 등록하세요.</span>
+      </div>
+    `;
+    return;
+  }
+
+  area.innerHTML = list.map(d => {
+    const is24 = d.date === "10.24";
+    const badgeBg = is24 ? "#ff9500" : "var(--color-primary)";
+    const mapQuery = encodeURIComponent(d.address || d.name);
+
+    return `
+      <div class="venue-card" style="border:1px solid rgba(0,0,0,0.06); display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+          <div class="venue-header-banner" style="background:var(--color-surface);">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <span class="venue-badge" style="background:${badgeBg}; font-weight:700;">${escapeHtml(d.dateLabel || d.date)} · ${escapeHtml(d.mealType || '식사')}</span>
+              <button onclick="deleteDiningPlace('${d.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px; padding:0 4px;" title="식사 장소 삭제">&times;</button>
+            </div>
+            <h3 style="font-size:18px; font-weight:700; color:var(--color-ink); margin-top:6px;">${escapeHtml(d.name)}</h3>
+          </div>
+          <div class="venue-body" style="padding:16px 20px 8px 20px;">
+            <p style="font-size:13px; color:var(--color-ink); margin-bottom:8px;">📍 <strong>주소:</strong> ${escapeHtml(d.address || '주소 미입력')}</p>
+            ${d.phone ? `<p style="font-size:13px; color:var(--color-ink-muted); margin-bottom:8px;">📞 <strong>연락처:</strong> ${escapeHtml(d.phone)}</p>` : ''}
+            <div style="background:var(--color-parchment); padding:10px 12px; border-radius:var(--radius-sm); font-size:12.5px; margin-top:10px; line-height:1.5;">
+              <strong>안내 및 비고:</strong><br>
+              ${escapeHtml(d.note || '별도 비고 없음')}
+            </div>
+          </div>
+        </div>
+        <div style="padding:0 20px 20px 20px;">
+          <button class="btn-secondary" style="width:100%; font-size:12.5px;" onclick="window.open('https://map.naver.com/v5/search/${mapQuery}', '_blank')">🗺️ 네이버 지도에서 길찾기</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function openAddDiningModal() {
+  const form = document.getElementById("dining-modal-form");
+  if (form) form.reset();
+  document.getElementById("dining-modal")?.classList.add("active");
+}
+
+function closeDiningModal() {
+  document.getElementById("dining-modal")?.classList.remove("active");
+}
+
+function saveDiningFromModal() {
+  const dateVal = document.getElementById("dining-form-date").value;
+  const mealVal = document.getElementById("dining-form-meal").value;
+  const nameVal = (document.getElementById("dining-form-name").value || "").trim();
+  const addressVal = (document.getElementById("dining-form-address").value || "").trim();
+  const phoneVal = (document.getElementById("dining-form-phone").value || "").trim();
+  const categoryVal = (document.getElementById("dining-form-category").value || "").trim();
+  const noteVal = (document.getElementById("dining-form-note").value || "").trim();
+
+  if (!nameVal || !addressVal) {
+    alert("식당/장소명과 주소를 입력해주세요.");
+    return;
+  }
+
+  const dateLabel = dateVal === "10.24" ? "10월 24일(토)" : "10월 25일(일)";
+  const newItem = {
+    id: "dining_" + Date.now(),
+    date: dateVal,
+    dateLabel: dateLabel,
+    mealType: mealVal,
+    name: nameVal,
+    address: addressVal,
+    phone: phoneVal,
+    category: categoryVal || "식사안내",
+    note: noteVal
+  };
+
+  diningPlacesDataStore.unshift(newItem);
+  saveDiningStore();
+  closeDiningModal();
+  renderDiningPlaces(currentDiningFilterDate);
+}
+
+function deleteDiningPlace(id) {
+  if (!confirm("선택한 식사 장소를 삭제하시겠습니까?")) return;
+  diningPlacesDataStore = diningPlacesDataStore.filter(x => x.id !== id);
+  saveDiningStore();
+  renderDiningPlaces(currentDiningFilterDate);
+}
+
+// 11. App Initialization on DOM Loaded
 document.addEventListener("DOMContentLoaded", () => {
   initStore();
   updateCountdown();
   switchTab("overview");
+  renderDiningPlaces();
 });

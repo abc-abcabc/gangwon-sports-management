@@ -46,7 +46,7 @@
         <button class="nav-tab" data-tab="roster" onclick="switchTab('roster')">참가·선수 관리</button>
         <button class="nav-tab" data-tab="brackets" onclick="switchTab('brackets')">대진표·경기일정</button>
         <button class="nav-tab" data-tab="rules" onclick="switchTab('rules')">경기 운영방법</button>
-        <button class="nav-tab" data-tab="venues" onclick="switchTab('venues')">경기장 안내</button>
+        <button class="nav-tab" data-tab="venues" onclick="switchTab('venues')">경기장 안내 및 식사 안내</button>
         <button class="nav-tab" data-tab="awards" onclick="switchTab('awards')">시상·전년도 기록</button>
       </div>
     </nav>
@@ -372,14 +372,16 @@
     </div>
   </section>
 
-  <!-- TAB 4: 경기장 안내 (Venues) -->
+  <!-- TAB 4: 경기장 및 식사 안내 (Venues & Dining) -->
   <section id="tab-venues" class="tab-content" style="display:none;">
     <div class="tile-section tile-parchment">
       <div class="section-container">
-        <h2 class="display-lg" style="text-align:center;">대회 경기장 및 행사장 위치 안내</h2>
-        <p class="lead-text" style="text-align:center; margin-bottom:28px;">삼척시 내 3개 주요 시설 정보</p>
+        <h2 class="display-lg" style="text-align:center;">대회 경기장 및 식사 장소 안내</h2>
+        <p class="lead-text" style="text-align:center; margin-bottom:28px;">삼척시 내 3개 주요 경기 시설 및 10.24(토) / 10.25(일) 날짜별 식사 장소</p>
 
-        <div class="venue-grid">
+        <!-- Section 1: Venues -->
+        <h3 class="display-md" style="font-size:20px; margin-bottom:14px; color:var(--color-primary);">🏟️ 대회 주요 경기장 위치</h3>
+        <div class="venue-grid" style="margin-bottom:40px;">
           <!-- Venue 1 -->
           <div class="venue-card">
             <div class="venue-header-banner">
@@ -438,6 +440,28 @@
               </div>
               <button class="btn-secondary" style="width:100%; font-size:13px;" onclick="window.open('https://map.naver.com/v5/search/%EC%A7%84%EC%A3%BC%EC%B4%88%EB%93%B1%ED%95%99%EA%B5%90', '_blank')">네이버 지도 열기</button>
             </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Dining Venues -->
+        <div style="padding-top:28px; border-top:2px solid var(--color-hairline);">
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+            <div>
+              <h3 class="display-md" style="font-size:22px; margin:0; color:var(--color-ink);">🍽️ 날짜별 식사 및 만찬 장소 안내</h3>
+              <p style="font-size:13px; color:var(--color-ink-muted); margin:4px 0 0 0;">10월 24일(토) 석식 만찬 & 10월 25일(일) 중식/식사 장소 목록</p>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <div class="sub-view-toggle">
+                <button id="dining-btn-all" class="sub-view-btn active" onclick="filterDiningPlaces('all')">전체 식사장소</button>
+                <button id="dining-btn-24" class="sub-view-btn" onclick="filterDiningPlaces('10.24')">📅 24일(토) 식사</button>
+                <button id="dining-btn-25" class="sub-view-btn" onclick="filterDiningPlaces('10.25')">📅 25일(일) 식사</button>
+              </div>
+              <button class="btn-primary" style="padding:6px 14px; font-size:12px;" onclick="openAddDiningModal()"><i data-lucide="plus-circle" style="width:13px;height:13px;"></i> 식사 장소 추가</button>
+            </div>
+          </div>
+
+          <div id="dining-places-render-area" class="venue-grid">
+            <!-- Dynamically rendered via JS -->
           </div>
         </div>
 
@@ -824,6 +848,65 @@
         <button type="button" class="btn-primary" onclick="closeDuplicateModal()">확인 완료</button>
       </div>
     </div>
+  <!-- Modal: Add Dining Venue -->
+  <div class="modal-backdrop" id="dining-modal">
+    <div class="modal-card" style="max-width:500px;">
+      <div class="modal-header">
+        <h3 class="modal-title">🍽️ 식사 장소 추가 등록</h3>
+        <button class="modal-close-btn" onclick="closeDiningModal()">&times;</button>
+      </div>
+      <form id="dining-modal-form" onsubmit="event.preventDefault(); saveDiningFromModal();">
+        <div class="form-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label class="form-label">이용 일자</label>
+            <select id="dining-form-date" class="form-select" required>
+              <option value="10.24">10월 24일 (토요일)</option>
+              <option value="10.25">10월 25일 (일요일)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">식사 구분</label>
+            <select id="dining-form-meal" class="form-select" required>
+              <option value="석식만찬">석식 만찬 (24일)</option>
+              <option value="중식">중식 (25일)</option>
+              <option value="조식">조식</option>
+              <option value="기타 모임">기타 모임/식사</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">식당 / 장소명</label>
+          <input type="text" id="dining-form-name" class="form-input" placeholder="예: 삼척 한우명가 또는 대운동장 연회장" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">위치 / 도로명 주소</label>
+          <input type="text" id="dining-form-address" class="form-input" placeholder="예: 강원 삼척시 중앙로 123" required>
+        </div>
+
+        <div class="form-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label class="form-label">전화번호 / 연락처</label>
+            <input type="text" id="dining-form-phone" class="form-input" placeholder="예: 033-570-0000">
+          </div>
+          <div class="form-group">
+            <label class="form-label">구분 태그</label>
+            <input type="text" id="dining-form-category" class="form-input" placeholder="예: 단체예약, 공식만찬">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">비고 및 안내사항</label>
+          <input type="text" id="dining-form-note" class="form-input" placeholder="예: 18:30 석식 단체 예약, 족구 경기 종료 후 이동">
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:20px;">
+          <button type="button" class="btn-secondary" onclick="closeDiningModal()">취소</button>
+          <button type="submit" class="btn-primary">장소 등록하기</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!-- Apple Footer -->
@@ -834,7 +917,7 @@
         <a href="#" class="footer-link" onclick="switchTab('roster')">참가 신청 및 선수단 관리</a>
         <a href="#" class="footer-link" onclick="switchTab('brackets')">종목별 대진표</a>
         <a href="#" class="footer-link" onclick="switchTab('rules')">종목별 경기 운영방법</a>
-        <a href="#" class="footer-link" onclick="switchTab('venues')">삼척 경기장 안내</a>
+        <a href="#" class="footer-link" onclick="switchTab('venues')">경기장 및 식사 안내</a>
         <a href="#" class="footer-link" onclick="switchTab('awards')">시상 규정 및 전년도 결과</a>
       </div>
       <p>주최: 강원특별자치도교육청 | 주관: 강원초등체육연구회, 강릉지회</p>

@@ -224,7 +224,6 @@ function initDiningStore() {
 function saveDiningStore() {
   localStorage.setItem("GANGWON_DINING_STORE_V1", JSON.stringify(diningPlacesDataStore));
 }
-}
 
 function saveStore() {
   localStorage.setItem("GANGWON_PE_STORE_GANGNEUNG_V6", JSON.stringify(playerDataStore));

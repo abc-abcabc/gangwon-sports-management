@@ -223,6 +223,170 @@ function updatePlayerDirect(playerId, field, value) {
   }
 }
 
+// Drag and Drop State & Handler Functions
+let draggedRowId = null;
+let touchDraggedRow = null;
+let touchClone = null;
+
+function renderDragHandleHtml(playerId) {
+  return `
+    <td class="drag-handle cell-center" title="드래그하거나 화살표로 순서 변경">
+      <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
+        <button type="button" class="btn-move-step" onclick="movePlayerStep('${playerId}', -1, event)" title="위로 이동">▲</button>
+        <span class="drag-grip" title="드래그하여 이동">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; opacity:0.6;"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>
+        </span>
+        <button type="button" class="btn-move-step" onclick="movePlayerStep('${playerId}', 1, event)" title="아래로 이동">▼</button>
+      </div>
+    </td>
+  `;
+}
+
+function movePlayerOrder(draggedId, targetId) {
+  if (!draggedId || !targetId || draggedId === targetId) return;
+  const players = playerDataStore.gangneung || [];
+  const fromIndex = players.findIndex(p => p.id === draggedId);
+  const toIndex = players.findIndex(p => p.id === targetId);
+  if (fromIndex === -1 || toIndex === -1) return;
+
+  const [movedPlayer] = players.splice(fromIndex, 1);
+  players.splice(toIndex, 0, movedPlayer);
+
+  saveStore();
+  renderRosterTable();
+}
+
+function movePlayerStep(playerId, direction, event) {
+  if (event) event.stopPropagation();
+  const players = playerDataStore.gangneung || [];
+
+  let list = players;
+  if (currentCategoryFilter === "soccer") {
+    list = players.filter(p => p.soccerM || p.soccerW);
+  } else if (currentCategoryFilter === "jokgu") {
+    list = players.filter(p => p.jokgu);
+  } else if (currentCategoryFilter === "badminton") {
+    list = players.filter(p => p.badminton);
+  }
+
+  const filteredIdx = list.findIndex(p => p.id === playerId);
+  if (filteredIdx === -1) return;
+  const targetFilteredIdx = filteredIdx + direction;
+  if (targetFilteredIdx < 0 || targetFilteredIdx >= list.length) return;
+
+  const targetPlayerId = list[targetFilteredIdx].id;
+  movePlayerOrder(playerId, targetPlayerId);
+}
+
+function setupRowDragEvents(tr) {
+  tr.addEventListener('dragstart', (e) => {
+    draggedRowId = tr.dataset.id;
+    tr.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', tr.dataset.id);
+  });
+
+  tr.addEventListener('dragend', () => {
+    tr.classList.remove('dragging');
+    document.querySelectorAll('.roster-row').forEach(row => row.classList.remove('drag-over'));
+    draggedRowId = null;
+  });
+
+  tr.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    if (!draggedRowId || draggedRowId === tr.dataset.id) return;
+    e.dataTransfer.dropEffect = 'move';
+
+    document.querySelectorAll('.roster-row').forEach(row => {
+      if (row !== tr) row.classList.remove('drag-over');
+    });
+    tr.classList.add('drag-over');
+  });
+
+  tr.addEventListener('dragleave', () => {
+    tr.classList.remove('drag-over');
+  });
+
+  tr.addEventListener('drop', (e) => {
+    e.preventDefault();
+    tr.classList.remove('drag-over');
+    const targetId = tr.dataset.id;
+    if (draggedRowId && targetId && draggedRowId !== targetId) {
+      movePlayerOrder(draggedRowId, targetId);
+    }
+  });
+
+  const grip = tr.querySelector('.drag-grip');
+  if (grip) {
+    grip.addEventListener('touchstart', (e) => {
+      touchDraggedRow = tr;
+      draggedRowId = tr.dataset.id;
+      tr.classList.add('dragging');
+
+      const touch = e.touches[0];
+      const rect = tr.getBoundingClientRect();
+
+      touchClone = tr.cloneNode(true);
+      touchClone.style.position = 'fixed';
+      touchClone.style.top = (touch.clientY - 20) + 'px';
+      touchClone.style.left = rect.left + 'px';
+      touchClone.style.width = rect.width + 'px';
+      touchClone.style.opacity = '0.85';
+      touchClone.style.pointerEvents = 'none';
+      touchClone.style.zIndex = '9999';
+      touchClone.style.boxShadow = '0 8px 20px rgba(0,0,0,0.2)';
+      touchClone.style.background = '#ffffff';
+      document.body.appendChild(touchClone);
+    }, { passive: true });
+
+    grip.addEventListener('touchmove', (e) => {
+      if (!touchDraggedRow || !touchClone) return;
+
+      const touch = e.touches[0];
+      touchClone.style.top = (touch.clientY - 20) + 'px';
+
+      const elementUnder = document.elementFromPoint(touch.clientX, touch.clientY);
+      const targetTr = elementUnder?.closest('.roster-row');
+
+      document.querySelectorAll('.roster-row').forEach(row => row.classList.remove('drag-over'));
+      if (targetTr && targetTr !== touchDraggedRow) {
+        targetTr.classList.add('drag-over');
+      }
+
+      if (e.cancelable) e.preventDefault();
+    }, { passive: false });
+
+    grip.addEventListener('touchend', (e) => {
+      if (!touchDraggedRow) return;
+
+      if (touchClone) {
+        touchClone.remove();
+        touchClone = null;
+      }
+
+      touchDraggedRow.classList.remove('dragging');
+
+      const touch = e.changedTouches[0];
+      const elementUnder = document.elementFromPoint(touch.clientX, touch.clientY);
+      const targetTr = elementUnder?.closest('.roster-row');
+
+      document.querySelectorAll('.roster-row').forEach(row => row.classList.remove('drag-over'));
+
+      if (targetTr && draggedRowId && targetTr.dataset.id && draggedRowId !== targetTr.dataset.id) {
+        movePlayerOrder(draggedRowId, targetTr.dataset.id);
+      }
+
+      touchDraggedRow = null;
+      draggedRowId = null;
+    });
+  }
+}
+
+function initRosterDragAndDrop() {
+  const rows = document.querySelectorAll('#roster-table tbody .roster-row');
+  rows.forEach(tr => setupRowDragEvents(tr));
+}
+
 function renderRosterTable() {
   const players = playerDataStore.gangneung || [];
   updateRosterStats();
@@ -265,6 +429,7 @@ function renderRosterTable() {
     tableEl.innerHTML = `
       <thead>
         <tr>
+          <th class="cell-center" style="width:55px;">이동</th>
           <th style="width:40px;">연번</th>
           <th style="min-width:125px;">소속(학교)</th>
           <th style="min-width:85px;">직위</th>
@@ -281,7 +446,8 @@ function renderRosterTable() {
       </thead>
       <tbody>
         ${filteredPlayers.map((p, idx) => `
-          <tr>
+          <tr class="roster-row" draggable="true" data-id="${p.id}">
+            ${renderDragHandleHtml(p.id)}
             <td class="cell-center" style="font-weight:600; color:var(--color-ink-muted);">${idx + 1}</td>
             <td>
               <input type="text" class="cell-direct-input" value="${escapeHtml(p.school)}" placeholder="학교명" onchange="updatePlayerDirect('${p.id}', 'school', this.value)">
@@ -309,13 +475,14 @@ function renderRosterTable() {
             </td>
           </tr>
         `).join("")}
-        ${filteredPlayers.length === 0 ? `<tr><td colspan="12" class="cell-center" style="padding:24px; color:var(--color-ink-muted);">등록된 선수가 없습니다. '선수 추가' 버튼을 눌러 추가하세요.</td></tr>` : ''}
+        ${filteredPlayers.length === 0 ? `<tr><td colspan="13" class="cell-center" style="padding:24px; color:var(--color-ink-muted);">등록된 선수가 없습니다. '선수 추가' 버튼을 눌러 추가하세요.</td></tr>` : ''}
       </tbody>
     `;
   } else if (currentCategoryFilter === "soccer") {
     tableEl.innerHTML = `
       <thead>
         <tr>
+          <th class="cell-center" style="width:55px;">이동</th>
           <th style="width:40px;">연번</th>
           <th style="min-width:125px;">소속(학교)</th>
           <th style="min-width:85px;">직위</th>
@@ -329,7 +496,8 @@ function renderRosterTable() {
       </thead>
       <tbody>
         ${filteredPlayers.map((p, idx) => `
-          <tr>
+          <tr class="roster-row" draggable="true" data-id="${p.id}">
+            ${renderDragHandleHtml(p.id)}
             <td class="cell-center" style="font-weight:600; color:var(--color-ink-muted);">${idx + 1}</td>
             <td><input type="text" class="cell-direct-input" value="${escapeHtml(p.school)}" onchange="updatePlayerDirect('${p.id}', 'school', this.value)"></td>
             <td>
@@ -350,13 +518,14 @@ function renderRosterTable() {
             </td>
           </tr>
         `).join("")}
-        ${filteredPlayers.length === 0 ? `<tr><td colspan="9" class="cell-center" style="padding:24px; color:var(--color-ink-muted);">축구 출전 표시된 선수가 없습니다. '전체 참가인원' 탭에서 축구 항목을 체크하세요.</td></tr>` : ''}
+        ${filteredPlayers.length === 0 ? `<tr><td colspan="10" class="cell-center" style="padding:24px; color:var(--color-ink-muted);">축구 출전 표시된 선수가 없습니다. '전체 참가인원' 탭에서 축구 항목을 체크하세요.</td></tr>` : ''}
       </tbody>
     `;
   } else if (currentCategoryFilter === "jokgu") {
     tableEl.innerHTML = `
       <thead>
         <tr>
+          <th class="cell-center" style="width:55px;">이동</th>
           <th style="width:40px;">연번</th>
           <th style="min-width:125px;">소속(학교)</th>
           <th style="min-width:85px;">직위</th>
@@ -370,7 +539,8 @@ function renderRosterTable() {
       </thead>
       <tbody>
         ${filteredPlayers.map((p, idx) => `
-          <tr>
+          <tr class="roster-row" draggable="true" data-id="${p.id}">
+            ${renderDragHandleHtml(p.id)}
             <td class="cell-center" style="font-weight:600; color:var(--color-ink-muted);">${idx + 1}</td>
             <td><input type="text" class="cell-direct-input" value="${escapeHtml(p.school)}" onchange="updatePlayerDirect('${p.id}', 'school', this.value)"></td>
             <td>
@@ -390,13 +560,14 @@ function renderRosterTable() {
             </td>
           </tr>
         `).join("")}
-        ${filteredPlayers.length === 0 ? `<tr><td colspan="9" class="cell-center" style="padding:24px; color:var(--color-ink-muted);">족구 출전 표시된 선수가 없습니다. '전체 참가인원' 탭에서 족구 항목을 체크하세요.</td></tr>` : ''}
+        ${filteredPlayers.length === 0 ? `<tr><td colspan="10" class="cell-center" style="padding:24px; color:var(--color-ink-muted);">족구 출전 표시된 선수가 없습니다. '전체 참가인원' 탭에서 족구 항목을 체크하세요.</td></tr>` : ''}
       </tbody>
     `;
   } else if (currentCategoryFilter === "badminton") {
     tableEl.innerHTML = `
       <thead>
         <tr>
+          <th class="cell-center" style="width:55px;">이동</th>
           <th style="width:40px;">연번</th>
           <th class="cell-center" style="min-width:65px;">출전급수</th>
           <th style="min-width:125px;">학교 / 기관</th>
@@ -411,7 +582,8 @@ function renderRosterTable() {
       </thead>
       <tbody>
         ${filteredPlayers.map((p, idx) => `
-          <tr>
+          <tr class="roster-row" draggable="true" data-id="${p.id}">
+            ${renderDragHandleHtml(p.id)}
             <td class="cell-center" style="font-weight:600; color:var(--color-ink-muted);">${idx + 1}</td>
             <td class="cell-center"><span style="background:rgba(52,199,89,0.1); color:#34c759; font-weight:700; padding:2px 8px; border-radius:9999px; font-size:11px;">${p.bGrade === 'A' || p.bGrade === 'B' ? 'A조' : 'B조'}</span></td>
             <td><input type="text" class="cell-direct-input" value="${escapeHtml(p.school)}" onchange="updatePlayerDirect('${p.id}', 'school', this.value)"></td>
@@ -430,10 +602,12 @@ function renderRosterTable() {
             </td>
           </tr>
         `).join("")}
-        ${filteredPlayers.length === 0 ? `<tr><td colspan="10" class="cell-center" style="padding:24px; color:var(--color-ink-muted);">배드민턴 출전 표시된 선수가 없습니다. '전체 참가인원' 탭에서 배드민턴 항목을 체크하세요.</td></tr>` : ''}
+        ${filteredPlayers.length === 0 ? `<tr><td colspan="11" class="cell-center" style="padding:24px; color:var(--color-ink-muted);">배드민턴 출전 표시된 선수가 없습니다. '전체 참가인원' 탭에서 배드민턴 항목을 체크하세요.</td></tr>` : ''}
       </tbody>
     `;
   }
+
+  initRosterDragAndDrop();
 }
 
 function filterRosterTable() {

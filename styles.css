@@ -941,3 +941,62 @@ h1, h2, h3, h4, p, span, button, a, div {
   gap: 10px;
   font-size: 13px;
 }
+
+/* Drag and Drop & Move Step Buttons Styling */
+.roster-row {
+  transition: background-color 0.15s ease;
+}
+
+.roster-row.dragging {
+  opacity: 0.35;
+  background-color: rgba(0, 102, 204, 0.12) !important;
+}
+
+.roster-row.drag-over {
+  border-top: 3px solid var(--color-primary) !important;
+  background-color: rgba(0, 102, 204, 0.08) !important;
+}
+
+.drag-handle {
+  user-select: none;
+  -webkit-user-select: none;
+  padding: 4px 2px !important;
+}
+
+.drag-grip {
+  cursor: grab;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 3px;
+  border-radius: 4px;
+  color: var(--color-ink-muted);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.drag-grip:hover {
+  background: rgba(0, 102, 204, 0.1);
+  color: var(--color-primary);
+}
+
+.drag-grip:active {
+  cursor: grabbing;
+}
+
+.btn-move-step {
+  background: none;
+  border: none;
+  color: var(--color-ink-light);
+  font-size: 9px;
+  cursor: pointer;
+  padding: 2px 3px;
+  border-radius: 3px;
+  line-height: 1;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.btn-move-step:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--color-ink);
+}
+

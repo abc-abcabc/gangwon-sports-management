@@ -28,6 +28,10 @@
         <span><i data-lucide="calendar" style="width:13px;height:13px;"></i> 10.24.(토) ~ 10.25.(일)</span>
         <span><i data-lucide="map-pin" style="width:13px;height:13px;"></i> 삼척시</span>
         <span id="countdown-badge" style="background:#0066cc; color:#fff; padding:2px 8px; border-radius:9999px; font-weight:600;">D-Day</span>
+        <button id="admin-auth-btn" class="admin-auth-badge" onclick="handleAdminAuthClick()" title="관리자 로그인">
+          <i data-lucide="lock" style="width:12px;height:12px;" id="admin-icon"></i>
+          <span id="admin-btn-text">관리자 로그인</span>
+        </button>
       </div>
     </header>
 
@@ -262,10 +266,10 @@
             <div class="table-toolbar-actions">
               <input type="text" id="roster-search" class="search-pill-input" placeholder="성명, 소속 검색..." oninput="filterRosterTable()">
               <input type="file" id="excel-file-input" accept=".xlsx, .xls, .csv" style="display:none;" onchange="handleExcelUpload(event)">
-              <button class="btn-utility" style="color:#d97706; font-weight:600;" onclick="checkDuplicateNamesModal()"><i data-lucide="alert-triangle" style="width:13px;height:13px;"></i> 중복 검사</button>
+              <button class="btn-utility admin-only" style="color:#d97706; font-weight:600;" onclick="checkDuplicateNamesModal()"><i data-lucide="alert-triangle" style="width:13px;height:13px;"></i> 중복 검사</button>
               <button class="btn-utility" onclick="downloadExcelTemplate()"><i data-lucide="file-spreadsheet" style="width:13px;height:13px;"></i> 양식 다운로드</button>
-              <button class="btn-utility" style="color:#16a34a; font-weight:600;" onclick="triggerExcelUpload()"><i data-lucide="upload" style="width:13px;height:13px;"></i> Excel 업로드</button>
-              <button class="btn-utility" onclick="openAddPlayerModal()"><i data-lucide="user-plus" style="width:13px;height:13px;"></i> 선수 추가</button>
+              <button class="btn-utility admin-only" style="color:#16a34a; font-weight:600;" onclick="triggerExcelUpload()"><i data-lucide="upload" style="width:13px;height:13px;"></i> Excel 업로드</button>
+              <button class="btn-utility admin-only" onclick="openAddPlayerModal()"><i data-lucide="user-plus" style="width:13px;height:13px;"></i> 선수 추가</button>
               <button class="btn-primary" style="padding:6px 14px; font-size:12px;" onclick="exportToCSV()"><i data-lucide="download" style="width:13px;height:13px;"></i> Excel 내보내기</button>
             </div>
           </div>
@@ -460,7 +464,7 @@
                 <button id="dining-btn-24" class="sub-view-btn" onclick="filterDiningPlaces('10.24')">24일(토)</button>
                 <button id="dining-btn-25" class="sub-view-btn" onclick="filterDiningPlaces('10.25')">25일(일)</button>
               </div>
-              <button class="btn-primary" style="padding:6px 14px; font-size:12px;" onclick="openAddDiningModal()"><i data-lucide="plus-circle" style="width:13px;height:13px;"></i> 식사 장소 추가</button>
+              <button class="btn-primary admin-only" style="padding:6px 14px; font-size:12px;" onclick="openAddDiningModal()"><i data-lucide="plus-circle" style="width:13px;height:13px;"></i> 식사 장소 추가</button>
             </div>
           </div>
 
@@ -475,7 +479,7 @@
             <div>
               <h3 class="display-md" style="font-size:22px; margin:0; color:var(--color-ink);">🏨 선수단 숙소 및 숙박 장소 안내</h3>
             </div>
-            <button class="btn-primary" style="padding:6px 14px; font-size:12px;" onclick="openAddLodgingModal()"><i data-lucide="plus-circle" style="width:13px;height:13px;"></i> 숙소 추가</button>
+            <button class="btn-primary admin-only" style="padding:6px 14px; font-size:12px;" onclick="openAddLodgingModal()"><i data-lucide="plus-circle" style="width:13px;height:13px;"></i> 숙소 추가</button>
           </div>
 
           <div id="lodging-places-render-area" class="venue-grid">
@@ -970,6 +974,38 @@
           <button type="submit" id="btn-save-lodging" class="btn-primary">숙소 저장하기</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Admin Login Modal -->
+  <div id="admin-modal" class="modal-backdrop" style="display:none;">
+    <div class="modal-card" style="max-width:400px;">
+      <div class="modal-header">
+        <h3 class="modal-title" style="display:flex; align-items:center; gap:8px;">
+          <i data-lucide="lock" style="width:20px;height:20px;color:var(--color-primary);"></i>
+          <span>관리자 권한 인증</span>
+        </h3>
+        <button class="modal-close-btn" onclick="closeAdminModal()">✕</button>
+      </div>
+      <div class="modal-body" style="padding-top:12px;">
+        <p style="font-size:13px; color:var(--color-ink-light); margin-bottom:16px;">
+          선수 명단 추가, 수정, 삭제 및 정보 편집을 수행하려면 비밀번호를 입력해주세요.<br>
+          <span style="font-size:12px; color:var(--color-primary); font-weight:600;">(초기 암호: 1234)</span>
+        </p>
+        <form onsubmit="handleAdminLoginSubmit(event)">
+          <div class="form-group">
+            <label class="form-label">관리자 비밀번호</label>
+            <input type="password" id="admin-password-input" class="form-input" placeholder="비밀번호 입력..." autocomplete="off" required>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
+            <button type="button" class="btn-utility" onclick="changeAdminPasswordPrompt()" style="font-size:12px; padding:4px 8px;">🔑 암호 변경</button>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="btn-secondary" onclick="closeAdminModal()">취소</button>
+              <button type="submit" class="btn-primary">로그인</button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 

@@ -1087,6 +1087,72 @@ h1, h2, h3, h4, p, span, button, a, div {
   background: #ff9500 !important;
   color: #ffffff !important;
   box-shadow: 0 2px 8px rgba(255, 149, 0, 0.3) !important;
+
+/* ==========================================================================
+   Admin Mode & Authorization Control
+   ========================================================================== */
+.admin-auth-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 9999px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.admin-auth-badge:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+body.is-admin .admin-auth-badge {
+  background: #34c759;
+  color: #ffffff;
+  border-color: #34c759;
+  box-shadow: 0 2px 8px rgba(52, 199, 89, 0.4);
+}
+
+/* Hide admin-only controls when NOT in admin mode */
+body:not(.is-admin) .admin-only {
+  display: none !important;
+}
+
+/* Readonly visual styling for admin-input when NOT in admin mode */
+body:not(.is-admin) .admin-input {
+  pointer-events: none !important;
+  opacity: 0.85;
+  background-color: transparent !important;
+}
+
+body:not(.is-admin) input.cell-direct-input {
+  pointer-events: none !important;
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+body:not(.is-admin) select.cell-direct-input,
+body:not(.is-admin) select.cell-direct-select {
+  pointer-events: none !important;
+  appearance: none;
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+body:not(.is-admin) .excel-table input[type="checkbox"] {
+  pointer-events: none !important;
+  opacity: 0.7;
+}
+
+body:not(.is-admin) .drag-handle,
+body:not(.is-admin) .drag-header {
+  display: none !important;
 }
 
 

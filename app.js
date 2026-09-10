@@ -423,6 +423,7 @@ function updateRosterStats() {
 }
 
 function updatePlayerDirect(playerId, field, value) {
+  if (!ensureAdminAuthorized()) return;
   const players = playerDataStore.gangneung || [];
   const player = players.find(p => p.id === playerId);
   if (player) {
@@ -720,7 +721,7 @@ function renderRosterTable() {
               <input type="text" class="cell-direct-input" style="font-size:12px; color:var(--color-ink-muted);" value="${escapeHtml(p.note || '')}" placeholder="비고 입력" oninput="updatePlayerDirect('${p.id}', 'note', this.value)">
             </td>
             <td class="cell-center">
-              <button onclick="deletePlayer('${p.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px; padding:2px 6px;" title="삭제">&times;</button>
+              <button class="admin-only" onclick="deletePlayer('${p.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px; padding:2px 6px;" title="삭제">&times;</button>
             </td>
           </tr>
         `).join("")}
@@ -763,7 +764,7 @@ function renderRosterTable() {
             <td class="cell-center"><input type="checkbox" ${p.dinner ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'dinner')"></td>
             <td><input type="text" class="cell-direct-input" style="font-size:12px; color:var(--color-ink-muted);" value="${escapeHtml(p.note || '')}" placeholder="비고" oninput="updatePlayerDirect('${p.id}', 'note', this.value)"></td>
             <td class="cell-center">
-              <button onclick="deletePlayer('${p.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px;" title="삭제">&times;</button>
+              <button class="admin-only" onclick="deletePlayer('${p.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px;" title="삭제">&times;</button>
             </td>
           </tr>
         `).join("")}
@@ -805,7 +806,7 @@ function renderRosterTable() {
             <td class="cell-center"><input type="checkbox" ${p.dinner ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'dinner')"></td>
             <td><input type="text" class="cell-direct-input" style="font-size:12px; color:var(--color-ink-muted);" value="${escapeHtml(p.note || '')}" placeholder="비고" oninput="updatePlayerDirect('${p.id}', 'note', this.value)"></td>
             <td class="cell-center">
-              <button onclick="deletePlayer('${p.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px;" title="삭제">&times;</button>
+              <button class="admin-only" onclick="deletePlayer('${p.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px;" title="삭제">&times;</button>
             </td>
           </tr>
         `).join("")}
@@ -847,7 +848,7 @@ function renderRosterTable() {
             <td class="cell-center"><input type="checkbox" ${p.stay ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'stay')"></td>
             <td><input type="text" class="cell-direct-input" style="font-size:12px; color:var(--color-ink-muted);" value="${escapeHtml(p.note || '')}" placeholder="비고" oninput="updatePlayerDirect('${p.id}', 'note', this.value)"></td>
             <td class="cell-center">
-              <button onclick="deletePlayer('${p.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px;" title="삭제">&times;</button>
+              <button class="admin-only" onclick="deletePlayer('${p.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px;" title="삭제">&times;</button>
             </td>
           </tr>
         `).join("")}
@@ -929,6 +930,7 @@ function filterRosterTable() {
 }
 
 function togglePlayerField(playerId, field) {
+  if (!ensureAdminAuthorized()) return;
   const players = playerDataStore.gangneung || [];
   const player = players.find(p => p.id === playerId);
   if (player) {
@@ -939,6 +941,7 @@ function togglePlayerField(playerId, field) {
 }
 
 function deletePlayer(playerId) {
+  if (!ensureAdminAuthorized()) return;
   if (confirm("정말 이 선수 정보를 삭제하시겠습니까?")) {
     playerDataStore.gangneung = (playerDataStore.gangneung || []).filter(p => p.id !== playerId);
     saveStore();
@@ -948,6 +951,7 @@ function deletePlayer(playerId) {
 
 // 7. Add / Edit Player Modal Logic
 function openAddPlayerModal() {
+  if (!ensureAdminAuthorized()) return;
   document.getElementById("form-player-id").value = "";
   document.getElementById("modal-player-title").textContent = "신규 선수 등록";
   document.getElementById("btn-save-player").textContent = "저장하기";
@@ -1408,8 +1412,8 @@ function renderDiningPlaces(filterDate = 'all') {
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
               <span class="venue-badge" style="background:${badgeBg}; font-weight:700;">${escapeHtml(d.dateLabel || d.date)} · ${escapeHtml(d.mealType || '식사')}</span>
               <div style="display:flex; align-items:center; gap:6px;">
-                <button class="btn-secondary" style="font-size:11.5px; padding:3px 9px;" onclick="editDiningPlace('${d.id}')">✏️ 수정</button>
-                <button onclick="deleteDiningPlace('${d.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px; padding:0 4px;" title="식사 장소 삭제">&times;</button>
+                <button class="btn-secondary admin-only" style="font-size:11.5px; padding:3px 9px;" onclick="editDiningPlace('${d.id}')">✏️ 수정</button>
+                <button class="admin-only" onclick="deleteDiningPlace('${d.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px; padding:0 4px;" title="식사 장소 삭제">&times;</button>
               </div>
             </div>
             <h3 style="font-size:18px; font-weight:700; color:var(--color-ink); margin-top:6px;">${escapeHtml(d.name)}</h3>
@@ -1432,6 +1436,7 @@ function renderDiningPlaces(filterDate = 'all') {
 }
 
 function openAddDiningModal() {
+  if (!ensureAdminAuthorized()) return;
   const form = document.getElementById("dining-modal-form");
   if (form) form.reset();
   document.getElementById("dining-form-id").value = "";
@@ -1441,6 +1446,7 @@ function openAddDiningModal() {
 }
 
 function editDiningPlace(id) {
+  if (!ensureAdminAuthorized()) return;
   const item = (diningPlacesDataStore || []).find(x => x.id === id);
   if (!item) return;
 
@@ -1512,6 +1518,7 @@ function saveDiningFromModal() {
 }
 
 function deleteDiningPlace(id) {
+  if (!ensureAdminAuthorized()) return;
   if (!confirm("선택한 식사 장소를 삭제하시겠습니까?")) return;
   diningPlacesDataStore = diningPlacesDataStore.filter(x => x.id !== id);
   saveDiningStore();
@@ -1544,8 +1551,8 @@ function renderLodgingPlaces() {
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
               <span class="venue-badge" style="background:#af52de; font-weight:700;">🏨 ${escapeHtml(l.category || '숙소')}</span>
               <div style="display:flex; align-items:center; gap:6px;">
-                <button class="btn-secondary" style="font-size:11.5px; padding:3px 9px;" onclick="editLodgingPlace('${l.id}')">✏️ 수정</button>
-                <button onclick="deleteLodgingPlace('${l.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px; padding:0 4px;" title="숙소 삭제">&times;</button>
+                <button class="btn-secondary admin-only" style="font-size:11.5px; padding:3px 9px;" onclick="editLodgingPlace('${l.id}')">✏️ 수정</button>
+                <button class="admin-only" onclick="deleteLodgingPlace('${l.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px; padding:0 4px;" title="숙소 삭제">&times;</button>
               </div>
             </div>
             <h3 style="font-size:18px; font-weight:700; color:var(--color-ink); margin-top:6px;">${escapeHtml(l.name)}</h3>
@@ -1568,6 +1575,7 @@ function renderLodgingPlaces() {
 }
 
 function openAddLodgingModal() {
+  if (!ensureAdminAuthorized()) return;
   const form = document.getElementById("lodging-modal-form");
   if (form) form.reset();
   document.getElementById("lodging-form-id").value = "";
@@ -1577,6 +1585,7 @@ function openAddLodgingModal() {
 }
 
 function editLodgingPlace(id) {
+  if (!ensureAdminAuthorized()) return;
   const item = (lodgingPlacesDataStore || []).find(x => x.id === id);
   if (!item) return;
 
@@ -1597,6 +1606,7 @@ function closeLodgingModal() {
 }
 
 function saveLodgingFromModal() {
+  if (!ensureAdminAuthorized()) return;
   const lodgingId = document.getElementById("lodging-form-id").value;
   const nameVal = (document.getElementById("lodging-form-name").value || "").trim();
   const addressVal = (document.getElementById("lodging-form-address").value || "").trim();
@@ -1636,15 +1646,141 @@ function saveLodgingFromModal() {
 }
 
 function deleteLodgingPlace(id) {
+  if (!ensureAdminAuthorized()) return;
   if (!confirm("선택한 숙소 정보를 삭제하시겠습니까?")) return;
   lodgingPlacesDataStore = lodgingPlacesDataStore.filter(x => x.id !== id);
   saveLodgingStore();
   renderLodgingPlaces();
 }
 
-// 12. App Initialization on DOM Loaded
+// 12. Admin Authorization & Lock Control Module
+let isAdminMode = false;
+
+function getAdminPassword() {
+  return localStorage.getItem('GANGWON_ADMIN_PASSWORD') || '1234';
+}
+
+function setAdminPassword(newPassword) {
+  localStorage.setItem('GANGWON_ADMIN_PASSWORD', newPassword);
+}
+
+function initAdminAuth() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const adminParam = urlParams.get('admin');
+  const storedAuth = sessionStorage.getItem('GANGWON_IS_ADMIN');
+
+  if (adminParam === getAdminPassword() || storedAuth === 'true') {
+    isAdminMode = true;
+    sessionStorage.setItem('GANGWON_IS_ADMIN', 'true');
+  } else {
+    isAdminMode = false;
+  }
+  updateAdminUI();
+}
+
+function ensureAdminAuthorized() {
+  if (!isAdminMode) {
+    alert("🔒 관리자 권한이 필요합니다. 헤더 상단의 [관리자 로그인] 버튼을 눌러 비밀번호를 입력해주세요.");
+    openAdminModal();
+    return false;
+  }
+  return true;
+}
+
+function handleAdminAuthClick() {
+  if (isAdminMode) {
+    if (confirm("관리자 모드를 로그아웃(일반 열람 모드로 전환)하시겠습니까?")) {
+      isAdminMode = false;
+      sessionStorage.removeItem('GANGWON_IS_ADMIN');
+      updateAdminUI();
+      alert("👁️ 일반 열람 모드로 전환되었습니다.");
+    }
+  } else {
+    openAdminModal();
+  }
+}
+
+function openAdminModal() {
+  const modal = document.getElementById("admin-modal");
+  const input = document.getElementById("admin-password-input");
+  if (modal) {
+    modal.style.display = "flex";
+    if (input) {
+      input.value = "";
+      setTimeout(() => input.focus(), 100);
+    }
+  }
+}
+
+function closeAdminModal() {
+  const modal = document.getElementById("admin-modal");
+  if (modal) modal.style.display = "none";
+}
+
+function handleAdminLoginSubmit(e) {
+  if (e) e.preventDefault();
+  const input = document.getElementById("admin-password-input");
+  const enteredPw = input ? input.value.trim() : '';
+
+  if (enteredPw === getAdminPassword()) {
+    isAdminMode = true;
+    sessionStorage.setItem('GANGWON_IS_ADMIN', 'true');
+    updateAdminUI();
+    closeAdminModal();
+    alert("🔓 관리자 인증 성공! 수정 권한이 활성화되었습니다.");
+  } else {
+    alert("❌ 비밀번호가 올바르지 않습니다. 다시 확인해 주세요.");
+    if (input) {
+      input.value = "";
+      input.focus();
+    }
+  }
+}
+
+function changeAdminPasswordPrompt() {
+  const currentPw = prompt("현재 관리자 비밀번호를 입력하세요:");
+  if (currentPw === null) return;
+
+  if (currentPw !== getAdminPassword()) {
+    alert("❌ 현재 비밀번호가 일치하지 않습니다.");
+    return;
+  }
+
+  const newPw = prompt("새로운 관리자 비밀번호를 입력하세요:");
+  if (!newPw || !newPw.trim()) {
+    alert("비밀번호가 변경되지 않았습니다.");
+    return;
+  }
+
+  setAdminPassword(newPw.trim());
+  alert("🎉 관리자 비밀번호가 성공적으로 변경되었습니다!");
+}
+
+function updateAdminUI() {
+  document.body.classList.toggle("is-admin", isAdminMode);
+
+  const btnText = document.getElementById("admin-btn-text");
+  const btnAuth = document.getElementById("admin-auth-btn");
+
+  if (btnText) {
+    btnText.textContent = isAdminMode ? "🔓 관리자 모드 (ON)" : "🔒 관리자 로그인";
+  }
+  if (btnAuth) {
+    btnAuth.title = isAdminMode ? "관리자 모드 활성화됨 (클릭 시 로그아웃)" : "관리자 로그인";
+  }
+
+  if (typeof renderRosterPage === 'function') renderRosterPage();
+  if (typeof renderDiningPlaces === 'function') renderDiningPlaces();
+  if (typeof renderLodgingPlaces === 'function') renderLodgingPlaces();
+  if (typeof renderBracketsPage === 'function') renderBracketsPage();
+
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+// 13. App Initialization on DOM Loaded
 document.addEventListener("DOMContentLoaded", () => {
   initStore();
+  initAdminAuth();
   updateCountdown();
   switchTab("overview");
   renderDiningPlaces();

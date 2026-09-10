@@ -1034,24 +1034,232 @@ function savePlayerForm(e) {
   renderRosterPage();
 }
 
-// 8. CSV Export Function
+// 8. Excel Import & Export Functions
+function triggerExcelUpload() {
+  const input = document.getElementById("excel-file-input");
+  if (input) {
+    input.value = ""; // reset
+    input.click();
+  }
+}
+
+function downloadExcelTemplate() {
+  if (typeof XLSX === 'undefined') {
+    alert("엑셀 라이브러리가 로드되지 않았습니다. 잠시 후 다시 시도해주세요.");
+    return;
+  }
+
+  const templateData = [
+    {
+      "연번": 1,
+      "소속(학교)": "강릉초",
+      "직위": "교사",
+      "성명": "홍길동",
+      "성별": "남",
+      "참가종목": "축구",
+      "숙박여부": "O",
+      "24일석식만찬": "O",
+      "연락처": "010-1234-5678",
+      "비고": "예시데이터"
+    },
+    {
+      "연번": 2,
+      "소속(학교)": "율곡초",
+      "직위": "교감",
+      "성명": "김철수",
+      "성별": "남",
+      "참가종목": "족구",
+      "숙박여부": "X",
+      "24일석식만찬": "O",
+      "연락처": "010-9876-5432",
+      "비고": ""
+    },
+    {
+      "연번": 3,
+      "소속(학교)": "경포초",
+      "직위": "고문",
+      "성명": "이영희",
+      "성별": "여",
+      "참가종목": "배드민턴",
+      "숙박여부": "O",
+      "24일석식만찬": "X",
+      "연락처": "010-5555-7777",
+      "비고": "고문님"
+    }
+  ];
+
+  const ws = XLSX.utils.json_to_sheet(templateData);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "선수단명단양식");
+  XLSX.writeFile(wb, "강릉교육지원청_선수단_등록양식.xlsx");
+}
+
+function handleExcelUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  if (typeof XLSX === 'undefined') {
+    alert("엑셀 라이브러리가 로드되지 않았습니다. 인터넷 연결을 확인해주세요.");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      const rows = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+
+      if (!rows || rows.length === 0) {
+        alert("업로드한 엑셀 파일에 데이터가 없습니다.");
+        return;
+      }
+
+      let addedCount = 0;
+      let updatedCount = 0;
+      const players = playerDataStore.gangneung;
+
+      rows.forEach((row) => {
+        // Find name & school keys (case-insensitive & multiple aliases)
+        const nameKey = Object.keys(row).find(k => /성명|이름|선수명|Name/i.test(k));
+        const name = nameKey ? String(row[nameKey]).trim() : '';
+
+        if (!name) return; // 이름 없는 행 스킵
+
+        const schoolKey = Object.keys(row).find(k => /소속|학교|School/i.test(k));
+        const school = schoolKey ? String(row[schoolKey]).trim() : '강릉교육지원청';
+
+        const posKey = Object.keys(row).find(k => /직위|직급|Position/i.test(k));
+        const position = posKey ? String(row[posKey]).trim() : '교사';
+
+        const genderKey = Object.keys(row).find(k => /성별|Gender/i.test(k));
+        const gender = genderKey ? String(row[genderKey]).trim() : '남';
+
+        const sportKey = Object.keys(row).find(k => /종목|참가종목|Sport/i.test(k));
+        const sportVal = sportKey ? String(row[sportKey]).trim() : '';
+
+        // Check specific sport columns if available
+        const jokguKey = Object.keys(row).find(k => /^족구$/i.test(k));
+        const soccerKey = Object.keys(row).find(k => /^축구$/i.test(k));
+        const badmKey = Object.keys(row).find(k => /^배드민턴$/i.test(k));
+
+        const checkBool = (val) => {
+          if (!val) return false;
+          const s = String(val).trim().toUpperCase();
+          return s === 'O' || s === 'Y' || s === '예' || s === 'TRUE' || s === '1' || s === '참여';
+        };
+
+        const isJokgu = checkBool(row[jokguKey]) || /족구/i.test(sportVal);
+        const isSoccer = checkBool(row[soccerKey]) || /축구/i.test(sportVal);
+        const isBadminton = checkBool(row[badmKey]) || /배드민턴/i.test(sportVal);
+
+        const stayKey = Object.keys(row).find(k => /숙박/i.test(k));
+        const isStay = checkBool(row[stayKey]);
+
+        const dinnerKey = Object.keys(row).find(k => /석식|만찬|식사/i.test(k));
+        const isDinner = checkBool(row[dinnerKey]);
+
+        const phoneKey = Object.keys(row).find(k => /연락처|전화|Phone/i.test(k));
+        const phone = phoneKey ? String(row[phoneKey]).trim() : '';
+
+        const noteKey = Object.keys(row).find(k => /비고|Note/i.test(k));
+        const note = noteKey ? String(row[noteKey]).trim() : '';
+
+        // Check existing player by Name + School
+        const existingIndex = players.findIndex(p => p.name === name && p.school === school);
+
+        if (existingIndex >= 0) {
+          // Update existing
+          players[existingIndex].position = position || players[existingIndex].position;
+          players[existingIndex].gender = gender || players[existingIndex].gender;
+          if (isJokgu) players[existingIndex].jokgu = true;
+          if (isSoccer) { players[existingIndex].soccer = true; players[existingIndex].soccerM = true; }
+          if (isBadminton) players[existingIndex].badminton = true;
+          if (stayKey) players[existingIndex].stay = isStay;
+          if (dinnerKey) players[existingIndex].dinner = isDinner;
+          if (phone) players[existingIndex].phone = phone;
+          if (note) players[existingIndex].note = note;
+          updatedCount++;
+        } else {
+          // Create new player
+          const newPlayer = {
+            id: Date.now() + Math.random().toString(36).substr(2, 5),
+            name: name,
+            school: school,
+            position: position,
+            gender: gender,
+            jokgu: isJokgu,
+            soccer: isSoccer,
+            soccerM: isSoccer,
+            badminton: isBadminton,
+            stay: isStay,
+            dinner: isDinner,
+            phone: phone,
+            note: note
+          };
+          players.push(newPlayer);
+          addedCount++;
+        }
+      });
+
+      saveStore();
+      renderRosterPage();
+      alert(`🎉 엑셀 업로드 완료!\n신규 등록: ${addedCount}명 / 기존 수정: ${updatedCount}명`);
+    } catch (err) {
+      console.error("Excel Read Error:", err);
+      alert("엑셀 파일을 읽는 중 오류가 발생했습니다. 올바른 엑셀 양식인지 확인해 주세요.");
+    }
+  };
+
+  reader.readAsArrayBuffer(file);
+}
+
 function exportToCSV() {
   const players = playerDataStore.gangneung || [];
+  if (players.length === 0) {
+    alert("내보낼 선수 명단 데이터가 없습니다.");
+    return;
+  }
 
-  let csvContent = "\uFEFF연번,소속(학교),직위,성명,숙박여부,24일석식만찬,족구,축구,배드민턴,비고\n";
+  if (typeof XLSX !== 'undefined') {
+    // Generate clean XLSX file
+    const exportData = players.map((p, idx) => ({
+      "연번": idx + 1,
+      "소속(학교)": p.school || '',
+      "직위": p.position || '',
+      "성명": p.name || '',
+      "성별": p.gender || '남',
+      "숙박여부": p.stay ? 'O' : 'X',
+      "24일석식만찬": p.dinner ? 'O' : 'X',
+      "족구": p.jokgu ? 'O' : 'X',
+      "축구": (p.soccer || p.soccerM) ? 'O' : 'X',
+      "배드민턴": p.badminton ? 'O' : 'X',
+      "연락처": p.phone || '',
+      "비고": p.note || ''
+    }));
 
-  players.forEach((p, idx) => {
-    csvContent += `${idx + 1},"${p.school}","${p.position}","${p.name}",${p.stay ? 'O' : 'X'},${p.dinner ? 'O' : 'X'},${p.jokgu ? 'O' : 'X'},${p.soccer || p.soccerM ? 'O' : 'X'},${p.badminton ? 'O' : 'X'},"${p.note || ''}"\n`;
-  });
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "선수단명단");
+    XLSX.writeFile(wb, `제31회_강원초등교원체육대회_강릉선수단명단.xlsx`);
+  } else {
+    // Fallback to CSV
+    let csvContent = "\uFEFF연번,소속(학교),직위,성명,성별,숙박여부,24일석식만찬,족구,축구,배드민턴,연락처,비고\n";
+    players.forEach((p, idx) => {
+      csvContent += `${idx + 1},"${p.school}","${p.position}","${p.name}","${p.gender || '남'}",${p.stay ? 'O' : 'X'},${p.dinner ? 'O' : 'X'},${p.jokgu ? 'O' : 'X'},${p.soccer || p.soccerM ? 'O' : 'X'},${p.badminton ? 'O' : 'X'},"${p.phone || ''}","${p.note || ''}"\n`;
+    });
 
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.setAttribute("href", url);
-  link.setAttribute("download", `제31회_강원초등교원체육대회_강릉교육지원청_선수단명단.csv`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `제31회_강원초등교원체육대회_강릉선수단명단.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
 }
 
 // 9. Brackets Page Functions (Direct In-Place Score Inputs)

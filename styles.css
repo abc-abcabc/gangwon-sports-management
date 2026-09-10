@@ -861,6 +861,11 @@ h1, h2, h3, h4, p, span, button, a, div {
     padding: 4px;
     border-radius: var(--radius-md);
   }
+  .sub-view-toggle-3 {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    width: 100% !important;
+  }
   .sub-view-btn {
     text-align: center;
     padding: 7px 4px;

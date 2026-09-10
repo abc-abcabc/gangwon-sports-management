@@ -376,8 +376,8 @@
   <section id="tab-venues" class="tab-content" style="display:none;">
     <div class="tile-section tile-parchment">
       <div class="section-container">
-        <h2 class="display-lg" style="text-align:center;">대회 경기장 및 식사 장소 안내</h2>
-        <p class="lead-text" style="text-align:center; margin-bottom:28px;">삼척시 내 3개 주요 경기 시설 및 10.24(토) / 10.25(일) 날짜별 식사 장소</p>
+        <h2 class="display-lg" style="text-align:center;">대회 경기장·식사·숙소 안내</h2>
+        <p class="lead-text" style="text-align:center; margin-bottom:28px; word-break:keep-all; line-height:1.5;">삼척시 3개 주요 경기장 시설 및<br>10.24(토) / 10.25(일) 날짜별 식사·숙소 안내</p>
 
         <!-- Section 1: Venues -->
         <h3 class="display-md" style="font-size:20px; margin-bottom:14px; color:var(--color-primary);">🏟️ 대회 주요 경기장 위치</h3>
@@ -450,10 +450,10 @@
               <h3 class="display-md" style="font-size:22px; margin:0; color:var(--color-ink);">🍽️ 날짜별 식사 및 만찬 장소 안내</h3>
             </div>
             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-              <div class="sub-view-toggle">
-                <button id="dining-btn-all" class="sub-view-btn active" onclick="filterDiningPlaces('all')">전체 식사장소</button>
-                <button id="dining-btn-24" class="sub-view-btn" onclick="filterDiningPlaces('10.24')">📅 24일(토) 식사</button>
-                <button id="dining-btn-25" class="sub-view-btn" onclick="filterDiningPlaces('10.25')">📅 25일(일) 식사</button>
+              <div class="sub-view-toggle sub-view-toggle-3">
+                <button id="dining-btn-all" class="sub-view-btn active" onclick="filterDiningPlaces('all')">전체 식사</button>
+                <button id="dining-btn-24" class="sub-view-btn" onclick="filterDiningPlaces('10.24')">24일(토)</button>
+                <button id="dining-btn-25" class="sub-view-btn" onclick="filterDiningPlaces('10.25')">25일(일)</button>
               </div>
               <button class="btn-primary" style="padding:6px 14px; font-size:12px;" onclick="openAddDiningModal()"><i data-lucide="plus-circle" style="width:13px;height:13px;"></i> 식사 장소 추가</button>
             </div>

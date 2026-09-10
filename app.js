@@ -197,7 +197,7 @@ function renderNameCellHtml(p, duplicateCounts, fontColor) {
   return `
     <td>
       <div style="display:flex; align-items:center; gap:4px;">
-        <input type="text" class="cell-direct-input ${isDup ? 'is-duplicate' : ''}" style="font-weight:700; color:${fontColor || 'var(--color-ink)'};" value="${escapeHtml(p.name)}" placeholder="성명" onchange="updatePlayerDirect('${p.id}', 'name', this.value)">
+        <input type="text" class="cell-direct-input ${isDup ? 'is-duplicate' : ''}" style="font-weight:700; color:${fontColor || 'var(--color-ink)'};" value="${escapeHtml(p.name)}" placeholder="성명" oninput="updatePlayerDirect('${p.id}', 'name', this.value)" onchange="renderRosterTable()">
         ${isDup ? `<span class="badge-duplicate-name" title="동명이인 ${dupCount}명 등록됨">⚠️ 중복(${dupCount})</span>` : ''}
       </div>
     </td>
@@ -494,7 +494,7 @@ function renderRosterTable() {
             ${renderDragHandleHtml(p.id)}
             <td class="cell-center" style="font-weight:600; color:var(--color-ink-muted);">${idx + 1}</td>
             <td>
-              <input type="text" class="cell-direct-input" value="${escapeHtml(p.school)}" placeholder="학교명" onchange="updatePlayerDirect('${p.id}', 'school', this.value)">
+              <input type="text" class="cell-direct-input" value="${escapeHtml(p.school)}" placeholder="학교명" oninput="updatePlayerDirect('${p.id}', 'school', this.value)">
             </td>
             <td>
               <select class="cell-direct-select" onchange="updatePlayerDirect('${p.id}', 'position', this.value)">
@@ -510,7 +510,7 @@ function renderRosterTable() {
             <td class="cell-center"><input type="checkbox" ${p.soccerW ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'soccerW')"></td>
             <td class="cell-center"><input type="checkbox" ${p.badminton ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'badminton')"></td>
             <td>
-              <input type="text" class="cell-direct-input" style="font-size:12px; color:var(--color-ink-muted);" value="${escapeHtml(p.note || '')}" placeholder="비고 입력" onchange="updatePlayerDirect('${p.id}', 'note', this.value)">
+              <input type="text" class="cell-direct-input" style="font-size:12px; color:var(--color-ink-muted);" value="${escapeHtml(p.note || '')}" placeholder="비고 입력" oninput="updatePlayerDirect('${p.id}', 'note', this.value)">
             </td>
             <td class="cell-center">
               <button onclick="deletePlayer('${p.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px; padding:2px 6px;" title="삭제">&times;</button>
@@ -541,7 +541,7 @@ function renderRosterTable() {
           <tr class="roster-row" draggable="true" data-id="${p.id}">
             ${renderDragHandleHtml(p.id)}
             <td class="cell-center" style="font-weight:600; color:var(--color-ink-muted);">${idx + 1}</td>
-            <td><input type="text" class="cell-direct-input" value="${escapeHtml(p.school)}" onchange="updatePlayerDirect('${p.id}', 'school', this.value)"></td>
+            <td><input type="text" class="cell-direct-input" value="${escapeHtml(p.school)}" oninput="updatePlayerDirect('${p.id}', 'school', this.value)"></td>
             <td>
               <select class="cell-direct-select" onchange="updatePlayerDirect('${p.id}', 'position', this.value)">
                 ${positionOptions.map(pos => `<option value="${pos}" ${p.position === pos ? 'selected' : ''}>${pos}</option>`).join("")}
@@ -554,7 +554,7 @@ function renderRosterTable() {
             </td>
             <td class="cell-center"><input type="checkbox" ${p.stay ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'stay')"></td>
             <td class="cell-center"><input type="checkbox" ${p.dinner ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'dinner')"></td>
-            <td><input type="text" class="cell-direct-input" style="font-size:12px; color:var(--color-ink-muted);" value="${escapeHtml(p.note || '')}" placeholder="비고" onchange="updatePlayerDirect('${p.id}', 'note', this.value)"></td>
+            <td><input type="text" class="cell-direct-input" style="font-size:12px; color:var(--color-ink-muted);" value="${escapeHtml(p.note || '')}" placeholder="비고" oninput="updatePlayerDirect('${p.id}', 'note', this.value)"></td>
             <td class="cell-center">
               <button onclick="deletePlayer('${p.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px;" title="삭제">&times;</button>
             </td>
@@ -584,7 +584,7 @@ function renderRosterTable() {
           <tr class="roster-row" draggable="true" data-id="${p.id}">
             ${renderDragHandleHtml(p.id)}
             <td class="cell-center" style="font-weight:600; color:var(--color-ink-muted);">${idx + 1}</td>
-            <td><input type="text" class="cell-direct-input" value="${escapeHtml(p.school)}" onchange="updatePlayerDirect('${p.id}', 'school', this.value)"></td>
+            <td><input type="text" class="cell-direct-input" value="${escapeHtml(p.school)}" oninput="updatePlayerDirect('${p.id}', 'school', this.value)"></td>
             <td>
               <select class="cell-direct-select" onchange="updatePlayerDirect('${p.id}', 'position', this.value)">
                 ${positionOptions.map(pos => `<option value="${pos}" ${p.position === pos ? 'selected' : ''}>${pos}</option>`).join("")}
@@ -596,7 +596,7 @@ function renderRosterTable() {
             </td>
             <td class="cell-center"><input type="checkbox" ${p.stay ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'stay')"></td>
             <td class="cell-center"><input type="checkbox" ${p.dinner ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'dinner')"></td>
-            <td><input type="text" class="cell-direct-input" style="font-size:12px; color:var(--color-ink-muted);" value="${escapeHtml(p.note || '')}" placeholder="비고" onchange="updatePlayerDirect('${p.id}', 'note', this.value)"></td>
+            <td><input type="text" class="cell-direct-input" style="font-size:12px; color:var(--color-ink-muted);" value="${escapeHtml(p.note || '')}" placeholder="비고" oninput="updatePlayerDirect('${p.id}', 'note', this.value)"></td>
             <td class="cell-center">
               <button onclick="deletePlayer('${p.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px;" title="삭제">&times;</button>
             </td>
@@ -628,7 +628,7 @@ function renderRosterTable() {
             ${renderDragHandleHtml(p.id)}
             <td class="cell-center" style="font-weight:600; color:var(--color-ink-muted);">${idx + 1}</td>
             <td class="cell-center"><span style="background:rgba(52,199,89,0.1); color:#34c759; font-weight:700; padding:2px 8px; border-radius:9999px; font-size:11px;">${p.bGrade === 'A' || p.bGrade === 'B' ? 'A조' : 'B조'}</span></td>
-            <td><input type="text" class="cell-direct-input" value="${escapeHtml(p.school)}" onchange="updatePlayerDirect('${p.id}', 'school', this.value)"></td>
+            <td><input type="text" class="cell-direct-input" value="${escapeHtml(p.school)}" oninput="updatePlayerDirect('${p.id}', 'school', this.value)"></td>
             <td>
               <select class="cell-direct-select" onchange="updatePlayerDirect('${p.id}', 'position', this.value)">
                 ${positionOptions.map(pos => `<option value="${pos}" ${p.position === pos ? 'selected' : ''}>${pos}</option>`).join("")}
@@ -638,7 +638,7 @@ function renderRosterTable() {
             <td class="cell-center">${p.gender || '남'}</td>
             <td class="cell-center"><span style="font-weight:600; color:var(--color-primary);">${p.bGrade || 'A'}등급</span></td>
             <td class="cell-center"><input type="checkbox" ${p.stay ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'stay')"></td>
-            <td><input type="text" class="cell-direct-input" style="font-size:12px; color:var(--color-ink-muted);" value="${escapeHtml(p.note || '')}" placeholder="비고" onchange="updatePlayerDirect('${p.id}', 'note', this.value)"></td>
+            <td><input type="text" class="cell-direct-input" style="font-size:12px; color:var(--color-ink-muted);" value="${escapeHtml(p.note || '')}" placeholder="비고" oninput="updatePlayerDirect('${p.id}', 'note', this.value)"></td>
             <td class="cell-center">
               <button onclick="deletePlayer('${p.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px;" title="삭제">&times;</button>
             </td>

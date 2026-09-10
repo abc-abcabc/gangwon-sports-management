@@ -20,25 +20,25 @@ const GANGWON_REGIONS = [
 
 const INITIAL_PLAYERS = {
   gangneung: [
-    { id: "p1", school: "남산초등학교", position: "교장", name: "김석남", stay: true, dinner: false, soccerM: false, soccerW: false, jokgu: false, badminton: false, note: "", bGrade: "A", gender: "남" },
-    { id: "p2", school: "금광초등학교", position: "교장", name: "김진홍", stay: true, dinner: false, soccerM: false, soccerW: false, jokgu: false, badminton: false, note: "", bGrade: "A", gender: "남" },
-    { id: "p3", school: "주영초등학교", position: "교감", name: "박상우", stay: true, dinner: false, soccerM: true, soccerW: false, jokgu: false, badminton: false, note: "87년생이상(40대)", bGrade: "B", gender: "남" },
-    { id: "p4", school: "연곡초등학교", position: "교감", name: "선민영", stay: true, dinner: false, soccerM: true, soccerW: false, jokgu: true, badminton: false, note: "87년생이상(40대)", bGrade: "B", gender: "남" },
-    { id: "p5", school: "성산초등학교", position: "교감", name: "김지승", stay: true, dinner: false, soccerM: true, soccerW: false, jokgu: true, badminton: false, note: "87년생이상(40대)", bGrade: "B", gender: "남" },
-    { id: "p6", school: "강릉초등학교", position: "교장", name: "고문석", stay: true, dinner: false, soccerM: false, soccerW: false, jokgu: true, badminton: false, note: "", bGrade: "A", gender: "남" },
-    { id: "p7", school: "강릉교육지원청", position: "교육과장", name: "신창근", stay: true, dinner: false, soccerM: false, soccerW: false, jokgu: false, badminton: false, note: "관리자", bGrade: "A", gender: "남" },
-    { id: "p8", school: "강릉교육지원청", position: "교육장", name: "강장혁", stay: false, dinner: false, soccerM: false, soccerW: false, jokgu: false, badminton: false, note: "단장", bGrade: "A", gender: "남" },
-    { id: "p9", school: "강릉교육지원청", position: "장학사", name: "이정관", stay: false, dinner: false, soccerM: false, soccerW: false, jokgu: false, badminton: false, note: "주무", bGrade: "B", gender: "남" },
-    { id: "p10", school: "노암초등학교", position: "교사", name: "김태익", stay: true, dinner: false, soccerM: true, soccerW: false, jokgu: false, badminton: false, note: "", bGrade: "B", gender: "남" },
-    { id: "p11", school: "초당초등학교", position: "교사", name: "김남준", stay: true, dinner: false, soccerM: true, soccerW: false, jokgu: false, badminton: false, note: "", bGrade: "C", gender: "남" },
-    { id: "p12", school: "남산초등학교", position: "교사", name: "김동수", stay: true, dinner: false, soccerM: true, soccerW: false, jokgu: false, badminton: false, note: "", bGrade: "C", gender: "남" },
-    { id: "p13", school: "교동초등학교", position: "교사", name: "김종완", stay: true, dinner: false, soccerM: true, soccerW: false, jokgu: false, badminton: false, note: "", bGrade: "B", gender: "남" },
-    { id: "p14", school: "경포초등학교", position: "교사", name: "남기민", stay: true, dinner: false, soccerM: true, soccerW: false, jokgu: true, badminton: false, note: "", bGrade: "C", gender: "남" },
-    { id: "p15", school: "중앙초등학교", position: "교사", name: "백서현", stay: true, dinner: false, soccerM: true, soccerW: false, jokgu: false, badminton: false, note: "", bGrade: "C", gender: "남" },
-    { id: "p16", school: "한솔초등학교", position: "교사", name: "신보식", stay: true, dinner: false, soccerM: true, soccerW: false, jokgu: false, badminton: false, note: "", bGrade: "D", gender: "남" },
-    { id: "p17", school: "한솔초등학교", position: "교사", name: "정의석", stay: false, dinner: false, soccerM: false, soccerW: false, jokgu: true, badminton: true, note: "배드민턴 A조", bGrade: "A", gender: "남" },
-    { id: "p18", school: "율곡초등학교", position: "교사", name: "이소연", stay: true, dinner: true, soccerM: false, soccerW: true, jokgu: false, badminton: true, note: "축구(여) 주장", bGrade: "B", gender: "여" },
-    { id: "p19", school: "명주초등학교", position: "교사", name: "최은경", stay: true, dinner: true, soccerM: false, soccerW: true, jokgu: false, badminton: false, note: "", bGrade: "C", gender: "여" }
+    { id: "p1", school: "남산초등학교", position: "교장", name: "김석남", stay: true, dinner: false, soccer: false, jokgu: false, badminton: false, note: "", bGrade: "A", gender: "남" },
+    { id: "p2", school: "금광초등학교", position: "교장", name: "김진홍", stay: true, dinner: false, soccer: false, jokgu: false, badminton: false, note: "", bGrade: "A", gender: "남" },
+    { id: "p3", school: "주영초등학교", position: "교감", name: "박상우", stay: true, dinner: false, soccer: true, jokgu: false, badminton: false, note: "87년생이상(40대)", bGrade: "B", gender: "남" },
+    { id: "p4", school: "연곡초등학교", position: "교감", name: "선민영", stay: true, dinner: false, soccer: true, jokgu: true, badminton: false, note: "87년생이상(40대)", bGrade: "B", gender: "남" },
+    { id: "p5", school: "성산초등학교", position: "교감", name: "김지승", stay: true, dinner: false, soccer: true, jokgu: true, badminton: false, note: "87년생이상(40대)", bGrade: "B", gender: "남" },
+    { id: "p6", school: "강릉초등학교", position: "교장", name: "고문석", stay: true, dinner: false, soccer: false, jokgu: true, badminton: false, note: "", bGrade: "A", gender: "남" },
+    { id: "p7", school: "강릉교육지원청", position: "교육과장", name: "신창근", stay: true, dinner: false, soccer: false, jokgu: false, badminton: false, note: "관리자", bGrade: "A", gender: "남" },
+    { id: "p8", school: "강릉교육지원청", position: "교육장", name: "강장혁", stay: false, dinner: false, soccer: false, jokgu: false, badminton: false, note: "단장", bGrade: "A", gender: "남" },
+    { id: "p9", school: "강릉교육지원청", position: "장학사", name: "이정관", stay: false, dinner: false, soccer: false, jokgu: false, badminton: false, note: "주무", bGrade: "B", gender: "남" },
+    { id: "p10", school: "노암초등학교", position: "교사", name: "김태익", stay: true, dinner: false, soccer: true, jokgu: false, badminton: false, note: "", bGrade: "B", gender: "남" },
+    { id: "p11", school: "초당초등학교", position: "교사", name: "김남준", stay: true, dinner: false, soccer: true, jokgu: false, badminton: false, note: "", bGrade: "C", gender: "남" },
+    { id: "p12", school: "남산초등학교", position: "교사", name: "김동수", stay: true, dinner: false, soccer: true, jokgu: false, badminton: false, note: "", bGrade: "C", gender: "남" },
+    { id: "p13", school: "교동초등학교", position: "교사", name: "김종완", stay: true, dinner: false, soccer: true, jokgu: false, badminton: false, note: "", bGrade: "B", gender: "남" },
+    { id: "p14", school: "경포초등학교", position: "교사", name: "남기민", stay: true, dinner: false, soccer: true, jokgu: true, badminton: false, note: "", bGrade: "C", gender: "남" },
+    { id: "p15", school: "중앙초등학교", position: "교사", name: "백서현", stay: true, dinner: false, soccer: true, jokgu: false, badminton: false, note: "", bGrade: "C", gender: "남" },
+    { id: "p16", school: "한솔초등학교", position: "교사", name: "신보식", stay: true, dinner: false, soccer: true, jokgu: false, badminton: false, note: "", bGrade: "D", gender: "남" },
+    { id: "p17", school: "한솔초등학교", position: "교사", name: "정의석", stay: false, dinner: false, soccer: false, jokgu: true, badminton: true, note: "배드민턴 A조", bGrade: "A", gender: "남" },
+    { id: "p18", school: "율곡초등학교", position: "교사", name: "이소연", stay: true, dinner: true, soccer: false, jokgu: false, badminton: true, note: "", bGrade: "B", gender: "여" },
+    { id: "p19", school: "명주초등학교", position: "교사", name: "최은경", stay: true, dinner: true, soccer: false, jokgu: false, badminton: false, note: "", bGrade: "C", gender: "여" }
   ]
 };
 
@@ -211,9 +211,7 @@ function updateRosterStats() {
   let adminCount = players.filter(p => ["교장", "교감", "교육장", "교육과장", "장학사", "전문직"].includes(p.position)).length;
   let stayCount = players.filter(p => p.stay).length;
   let dinnerCount = players.filter(p => p.dinner).length;
-  let soccerMCount = players.filter(p => p.soccerM).length;
-  let soccerWCount = players.filter(p => p.soccerW).length;
-  let soccerTotalCount = players.filter(p => p.soccerM || p.soccerW).length;
+  let soccerCount = players.filter(p => p.soccer || p.soccerM).length;
   let jokguCount = players.filter(p => p.jokgu).length;
   let badmintonCount = players.filter(p => p.badminton).length;
 
@@ -221,8 +219,7 @@ function updateRosterStats() {
   if (document.getElementById("stat-admin")) document.getElementById("stat-admin").textContent = `${adminCount}명`;
   if (document.getElementById("stat-stay")) document.getElementById("stat-stay").textContent = `${stayCount}명`;
   if (document.getElementById("stat-dinner")) document.getElementById("stat-dinner").textContent = `${dinnerCount}명`;
-  if (document.getElementById("stat-soccer-m")) document.getElementById("stat-soccer-m").textContent = `${soccerMCount}명`;
-  if (document.getElementById("stat-soccer-w")) document.getElementById("stat-soccer-w").textContent = `${soccerWCount}명`;
+  if (document.getElementById("stat-soccer")) document.getElementById("stat-soccer").textContent = `${soccerCount}명`;
   if (document.getElementById("stat-jokgu")) document.getElementById("stat-jokgu").textContent = `${jokguCount}명`;
   if (document.getElementById("stat-badminton")) document.getElementById("stat-badminton").textContent = `${badmintonCount}명`;
 
@@ -237,7 +234,7 @@ function updateRosterStats() {
   const totalDuplicatePlayers = players.filter(p => dupNamesList.includes((p.name || '').trim())).length;
 
   if (btnAll) btnAll.textContent = `전체 참가인원 (${totalCount}명)`;
-  if (btnSoccer) btnSoccer.textContent = `축구 참여인원 (${soccerTotalCount}명)`;
+  if (btnSoccer) btnSoccer.textContent = `축구 참여인원 (${soccerCount}명)`;
   if (btnJokgu) btnJokgu.textContent = `족구 참여인원 (${jokguCount}명)`;
   if (btnBadminton) btnBadminton.textContent = `배드민턴 참여인원 (${badmintonCount}명)`;
   if (btnDuplicate) {
@@ -691,7 +688,7 @@ function checkDuplicateNamesModal() {
                 <div>
                   <strong>${escapeHtml(p.school)}</strong> · ${escapeHtml(p.position)}
                   <span style="color:var(--color-ink-muted); margin-left:6px;">
-                    (${[p.soccerM ? '축구(남)' : '', p.soccerW ? '축구(여)' : '', p.jokgu ? '족구' : '', p.badminton ? '배드민턴' : ''].filter(Boolean).join(', ') || '종목미참가'})
+                    (${[p.soccer || p.soccerM ? '축구' : '', p.jokgu ? '족구' : '', p.badminton ? '배드민턴' : ''].filter(Boolean).join(', ') || '종목미참가'})
                   </span>
                 </div>
                 <div style="display:flex; gap:4px;">
@@ -758,8 +755,7 @@ function editPlayer(playerId) {
   document.getElementById("form-position").value = p.position || "교사";
   document.getElementById("form-name").value = p.name || "";
   document.getElementById("form-jokgu").checked = !!p.jokgu;
-  document.getElementById("form-soccer-m").checked = !!p.soccerM;
-  document.getElementById("form-soccer-w").checked = !!p.soccerW;
+  if (document.getElementById("form-soccer")) document.getElementById("form-soccer").checked = !!(p.soccer || p.soccerM);
   document.getElementById("form-badminton").checked = !!p.badminton;
   document.getElementById("form-stay").checked = !!p.stay;
   document.getElementById("form-dinner").checked = !!p.dinner;
@@ -784,8 +780,7 @@ function savePlayerForm(e) {
   const positionVal = document.getElementById("form-position").value;
   const nameVal = document.getElementById("form-name").value.trim();
   const jokguVal = document.getElementById("form-jokgu").checked;
-  const soccerMVal = document.getElementById("form-soccer-m").checked;
-  const soccerWVal = document.getElementById("form-soccer-w").checked;
+  const soccerVal = document.getElementById("form-soccer") ? document.getElementById("form-soccer").checked : false;
   const badmintonVal = document.getElementById("form-badminton").checked;
   const stayVal = document.getElementById("form-stay").checked;
   const dinnerVal = document.getElementById("form-dinner").checked;
@@ -798,8 +793,9 @@ function savePlayerForm(e) {
       player.position = positionVal;
       player.name = nameVal;
       player.jokgu = jokguVal;
-      player.soccerM = soccerMVal;
-      player.soccerW = soccerWVal;
+      player.soccer = soccerVal;
+      delete player.soccerM;
+      delete player.soccerW;
       player.badminton = badmintonVal;
       player.stay = stayVal;
       player.dinner = dinnerVal;
@@ -812,8 +808,7 @@ function savePlayerForm(e) {
       position: positionVal,
       name: nameVal,
       jokgu: jokguVal,
-      soccerM: soccerMVal,
-      soccerW: soccerWVal,
+      soccer: soccerVal,
       badminton: badmintonVal,
       stay: stayVal,
       dinner: dinnerVal,
@@ -833,10 +828,10 @@ function savePlayerForm(e) {
 function exportToCSV() {
   const players = playerDataStore.gangneung || [];
 
-  let csvContent = "\uFEFF연번,소속(학교),직위,성명,숙박여부,24일석식만찬,족구,축구(남),축구(여),배드민턴,비고\n";
+  let csvContent = "\uFEFF연번,소속(학교),직위,성명,숙박여부,24일석식만찬,족구,축구,배드민턴,비고\n";
 
   players.forEach((p, idx) => {
-    csvContent += `${idx + 1},"${p.school}","${p.position}","${p.name}",${p.stay ? 'O' : 'X'},${p.dinner ? 'O' : 'X'},${p.jokgu ? 'O' : 'X'},${p.soccerM ? 'O' : 'X'},${p.soccerW ? 'O' : 'X'},${p.badminton ? 'O' : 'X'},"${p.note || ''}"\n`;
+    csvContent += `${idx + 1},"${p.school}","${p.position}","${p.name}",${p.stay ? 'O' : 'X'},${p.dinner ? 'O' : 'X'},${p.jokgu ? 'O' : 'X'},${p.soccer || p.soccerM ? 'O' : 'X'},${p.badminton ? 'O' : 'X'},"${p.note || ''}"\n`;
   });
 
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });

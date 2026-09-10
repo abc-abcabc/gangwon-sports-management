@@ -1769,10 +1769,11 @@ function updateAdminUI() {
     btnAuth.title = isAdminMode ? "관리자 모드 활성화됨 (클릭 시 로그아웃)" : "관리자 로그인";
   }
 
-  if (typeof renderRosterPage === 'function') renderRosterPage();
-  if (typeof renderDiningPlaces === 'function') renderDiningPlaces();
-  if (typeof renderLodgingPlaces === 'function') renderLodgingPlaces();
-  if (typeof renderBracketsPage === 'function') renderBracketsPage();
+  if (typeof currentTab !== 'undefined' && currentTab) {
+    switchTab(currentTab);
+  } else {
+    if (typeof renderRosterPage === 'function') renderRosterPage();
+  }
 
   if (typeof lucide !== 'undefined') lucide.createIcons();
 }

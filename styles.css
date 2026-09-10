@@ -1087,6 +1087,7 @@ h1, h2, h3, h4, p, span, button, a, div {
   background: #ff9500 !important;
   color: #ffffff !important;
   box-shadow: 0 2px 8px rgba(255, 149, 0, 0.3) !important;
+}
 
 /* ==========================================================================
    Admin Mode & Authorization Control

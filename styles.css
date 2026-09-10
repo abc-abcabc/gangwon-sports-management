@@ -1000,3 +1000,36 @@ h1, h2, h3, h4, p, span, button, a, div {
   color: var(--color-ink);
 }
 
+/* Duplicate Name Warning Styling */
+.cell-direct-input.is-duplicate {
+  background-color: #fff8e6 !important;
+  border: 1px solid #ffa000 !important;
+  color: #b78103 !important;
+}
+
+.badge-duplicate-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(255, 149, 0, 0.15);
+  color: #d97706;
+  border: 1px solid rgba(217, 119, 6, 0.3);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.warning-toggle-btn {
+  color: #d97706 !important;
+}
+
+.warning-toggle-btn.active {
+  background: #ff9500 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(255, 149, 0, 0.3) !important;
+}
+
+

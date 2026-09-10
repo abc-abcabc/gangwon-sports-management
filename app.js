@@ -180,6 +180,30 @@ function renderRosterPage() {
   renderRosterTable();
 }
 
+function getDuplicateNameCounts(players) {
+  const counts = {};
+  (players || []).forEach(p => {
+    const name = (p.name || '').trim();
+    if (name) counts[name] = (counts[name] || 0) + 1;
+  });
+  return counts;
+}
+
+function renderNameCellHtml(p, duplicateCounts, fontColor) {
+  const name = (p.name || '').trim();
+  const dupCount = duplicateCounts[name] || 0;
+  const isDup = dupCount > 1;
+
+  return `
+    <td>
+      <div style="display:flex; align-items:center; gap:4px;">
+        <input type="text" class="cell-direct-input ${isDup ? 'is-duplicate' : ''}" style="font-weight:700; color:${fontColor || 'var(--color-ink)'};" value="${escapeHtml(p.name)}" placeholder="성명" onchange="updatePlayerDirect('${p.id}', 'name', this.value)">
+        ${isDup ? `<span class="badge-duplicate-name" title="동명이인 ${dupCount}명 등록됨">⚠️ 중복(${dupCount})</span>` : ''}
+      </div>
+    </td>
+  `;
+}
+
 function updateRosterStats() {
   const players = playerDataStore.gangneung || [];
 
@@ -206,11 +230,24 @@ function updateRosterStats() {
   const btnSoccer = document.getElementById("view-btn-soccer");
   const btnJokgu = document.getElementById("view-btn-jokgu");
   const btnBadminton = document.getElementById("view-btn-badminton");
+  const btnDuplicate = document.getElementById("view-btn-duplicate");
+
+  const duplicateCounts = getDuplicateNameCounts(players);
+  const dupNamesList = Object.keys(duplicateCounts).filter(n => duplicateCounts[n] > 1);
+  const totalDuplicatePlayers = players.filter(p => dupNamesList.includes((p.name || '').trim())).length;
 
   if (btnAll) btnAll.textContent = `전체 참가인원 (${totalCount}명)`;
   if (btnSoccer) btnSoccer.textContent = `축구 참여인원 (${soccerTotalCount}명)`;
   if (btnJokgu) btnJokgu.textContent = `족구 참여인원 (${jokguCount}명)`;
   if (btnBadminton) btnBadminton.textContent = `배드민턴 참여인원 (${badmintonCount}명)`;
+  if (btnDuplicate) {
+    if (totalDuplicatePlayers > 0) {
+      btnDuplicate.style.display = "inline-flex";
+      btnDuplicate.textContent = `⚠️ 중복 이름 (${totalDuplicatePlayers}명)`;
+    } else {
+      btnDuplicate.style.display = "none";
+    }
+  }
 }
 
 function updatePlayerDirect(playerId, field, value) {
@@ -391,6 +428,10 @@ function renderRosterTable() {
   const players = playerDataStore.gangneung || [];
   updateRosterStats();
 
+  const duplicateCounts = getDuplicateNameCounts(players);
+  const dupNamesList = Object.keys(duplicateCounts).filter(n => duplicateCounts[n] > 1);
+  const totalDuplicatePlayersCount = players.filter(p => dupNamesList.includes((p.name || '').trim())).length;
+
   const soccerTotalCount = players.filter(p => p.soccerM || p.soccerW).length;
   const jokguCount = players.filter(p => p.jokgu).length;
   const badmintonCount = players.filter(p => p.badminton).length;
@@ -400,6 +441,7 @@ function renderRosterTable() {
     if (currentCategoryFilter === "soccer") categoryTitleEl.textContent = `축구 참여인원 명단 (${soccerTotalCount}명)`;
     else if (currentCategoryFilter === "jokgu") categoryTitleEl.textContent = `족구 참여인원 명단 (${jokguCount}명)`;
     else if (currentCategoryFilter === "badminton") categoryTitleEl.textContent = `배드민턴 참여인원 명단 (${badmintonCount}명)`;
+    else if (currentCategoryFilter === "duplicate") categoryTitleEl.textContent = `⚠️ 동명이인 중복 선수 명단 (${totalDuplicatePlayersCount}명)`;
     else categoryTitleEl.textContent = `전체 참가인원 명단 (${players.length}명)`;
   }
 
@@ -412,6 +454,8 @@ function renderRosterTable() {
     categoryFiltered = players.filter(p => p.jokgu);
   } else if (currentCategoryFilter === "badminton") {
     categoryFiltered = players.filter(p => p.badminton);
+  } else if (currentCategoryFilter === "duplicate") {
+    categoryFiltered = players.filter(p => dupNamesList.includes((p.name || '').trim()));
   }
 
   const filteredPlayers = categoryFiltered.filter(p => 
@@ -425,7 +469,7 @@ function renderRosterTable() {
 
   const positionOptions = ["교사", "교장", "교감", "교육장", "교육과장", "장학사", "전문직"];
 
-  if (currentCategoryFilter === "all") {
+  if (currentCategoryFilter === "all" || currentCategoryFilter === "duplicate") {
     tableEl.innerHTML = `
       <thead>
         <tr>
@@ -433,7 +477,7 @@ function renderRosterTable() {
           <th style="width:40px;">연번</th>
           <th style="min-width:125px;">소속(학교)</th>
           <th style="min-width:85px;">직위</th>
-          <th style="min-width:85px;">성명</th>
+          <th style="min-width:140px;">성명</th>
           <th class="cell-center" style="min-width:45px;">숙박</th>
           <th class="cell-center" style="min-width:65px;">24일만찬</th>
           <th class="cell-center" style="min-width:45px;">족구</th>
@@ -458,9 +502,7 @@ function renderRosterTable() {
                 ${!positionOptions.includes(p.position) ? `<option value="${escapeHtml(p.position)}" selected>${escapeHtml(p.position)}</option>` : ''}
               </select>
             </td>
-            <td>
-              <input type="text" class="cell-direct-input" style="font-weight:700; color:var(--color-ink);" value="${escapeHtml(p.name)}" placeholder="성명" onchange="updatePlayerDirect('${p.id}', 'name', this.value)">
-            </td>
+            ${renderNameCellHtml(p, duplicateCounts, 'var(--color-ink)')}
             <td class="cell-center"><input type="checkbox" ${p.stay ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'stay')"></td>
             <td class="cell-center"><input type="checkbox" ${p.dinner ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'dinner')"></td>
             <td class="cell-center"><input type="checkbox" ${p.jokgu ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'jokgu')"></td>
@@ -475,7 +517,7 @@ function renderRosterTable() {
             </td>
           </tr>
         `).join("")}
-        ${filteredPlayers.length === 0 ? `<tr><td colspan="13" class="cell-center" style="padding:24px; color:var(--color-ink-muted);">등록된 선수가 없습니다. '선수 추가' 버튼을 눌러 추가하세요.</td></tr>` : ''}
+        ${filteredPlayers.length === 0 ? `<tr><td colspan="13" class="cell-center" style="padding:24px; color:var(--color-ink-muted);">${currentCategoryFilter === 'duplicate' ? '중복된 이름의 선수가 없습니다. 모든 이름이 고유합니다. 🎉' : '등록된 선수가 없습니다. \'선수 추가\' 버튼을 눌러 추가하세요.'}</td></tr>` : ''}
       </tbody>
     `;
   } else if (currentCategoryFilter === "soccer") {
@@ -486,7 +528,7 @@ function renderRosterTable() {
           <th style="width:40px;">연번</th>
           <th style="min-width:125px;">소속(학교)</th>
           <th style="min-width:85px;">직위</th>
-          <th style="min-width:85px;">성명</th>
+          <th style="min-width:140px;">성명</th>
           <th class="cell-center" style="min-width:70px;">구분</th>
           <th class="cell-center" style="min-width:65px;">숙박 여부</th>
           <th class="cell-center" style="min-width:65px;">24일 만찬</th>
@@ -505,7 +547,7 @@ function renderRosterTable() {
                 ${positionOptions.map(pos => `<option value="${pos}" ${p.position === pos ? 'selected' : ''}>${pos}</option>`).join("")}
               </select>
             </td>
-            <td><input type="text" class="cell-direct-input" style="font-weight:700; color:var(--color-primary);" value="${escapeHtml(p.name)}" onchange="updatePlayerDirect('${p.id}', 'name', this.value)"></td>
+            ${renderNameCellHtml(p, duplicateCounts, 'var(--color-primary)')}
             <td class="cell-center">
               ${p.soccerM ? '<span style="background:rgba(0,102,204,0.1); color:var(--color-primary); padding:2px 8px; border-radius:9999px; font-weight:600; font-size:11px;">축구(남)</span>' : ''}
               ${p.soccerW ? '<span style="background:rgba(175,82,222,0.1); color:#af52de; padding:2px 8px; border-radius:9999px; font-weight:600; font-size:11px;">축구(여)</span>' : ''}
@@ -529,7 +571,7 @@ function renderRosterTable() {
           <th style="width:40px;">연번</th>
           <th style="min-width:125px;">소속(학교)</th>
           <th style="min-width:85px;">직위</th>
-          <th style="min-width:85px;">성명</th>
+          <th style="min-width:140px;">성명</th>
           <th class="cell-center" style="min-width:110px;">선수 자격 (교원2명 이상)</th>
           <th class="cell-center" style="min-width:65px;">숙박 여부</th>
           <th class="cell-center" style="min-width:65px;">24일 만찬</th>
@@ -548,7 +590,7 @@ function renderRosterTable() {
                 ${positionOptions.map(pos => `<option value="${pos}" ${p.position === pos ? 'selected' : ''}>${pos}</option>`).join("")}
               </select>
             </td>
-            <td><input type="text" class="cell-direct-input" style="font-weight:700; color:#ff9500;" value="${escapeHtml(p.name)}" onchange="updatePlayerDirect('${p.id}', 'name', this.value)"></td>
+            ${renderNameCellHtml(p, duplicateCounts, '#ff9500')}
             <td class="cell-center">
               ${["교장", "교감", "전문직", "교육장", "교육과장", "장학사"].includes(p.position) ? '<span style="background:rgba(255,149,0,0.1); color:#ff9500; font-weight:700; padding:2px 8px; border-radius:9999px; font-size:11px;">관리자 규정 충족</span>' : '<span style="color:var(--color-ink-muted); font-size:11px;">일반 교사</span>'}
             </td>
@@ -572,7 +614,7 @@ function renderRosterTable() {
           <th class="cell-center" style="min-width:65px;">출전급수</th>
           <th style="min-width:125px;">학교 / 기관</th>
           <th style="min-width:85px;">직위</th>
-          <th style="min-width:85px;">성명</th>
+          <th style="min-width:140px;">성명</th>
           <th class="cell-center" style="min-width:45px;">성별</th>
           <th class="cell-center" style="min-width:55px;">등급</th>
           <th class="cell-center" style="min-width:45px;">숙박</th>
@@ -592,7 +634,7 @@ function renderRosterTable() {
                 ${positionOptions.map(pos => `<option value="${pos}" ${p.position === pos ? 'selected' : ''}>${pos}</option>`).join("")}
               </select>
             </td>
-            <td><input type="text" class="cell-direct-input" style="font-weight:700; color:#34c759;" value="${escapeHtml(p.name)}" onchange="updatePlayerDirect('${p.id}', 'name', this.value)"></td>
+            ${renderNameCellHtml(p, duplicateCounts, '#34c759')}
             <td class="cell-center">${p.gender || '남'}</td>
             <td class="cell-center"><span style="font-weight:600; color:var(--color-primary);">${p.bGrade || 'A'}등급</span></td>
             <td class="cell-center"><input type="checkbox" ${p.stay ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'stay')"></td>
@@ -608,6 +650,71 @@ function renderRosterTable() {
   }
 
   initRosterDragAndDrop();
+}
+
+// Duplicate Name Modal Handler
+function checkDuplicateNamesModal() {
+  const players = playerDataStore.gangneung || [];
+  const duplicateCounts = getDuplicateNameCounts(players);
+  const dupNames = Object.keys(duplicateCounts).filter(n => duplicateCounts[n] > 1);
+
+  const container = document.getElementById("duplicate-modal-content");
+  if (!container) return;
+
+  if (dupNames.length === 0) {
+    container.innerHTML = `
+      <div style="text-align:center; padding:24px 12px; color:var(--color-success);">
+        <h4 style="font-size:16px; font-weight:700; color:var(--color-ink); margin-bottom:6px;">✅ 중복된 이름이 없습니다</h4>
+        <p style="font-size:13px; color:var(--color-ink-muted);">모든 참가 선수의 성명이 고유하며 중복 등록된 인원이 없습니다.</p>
+      </div>
+    `;
+  } else {
+    let html = `
+      <div style="background:rgba(255,149,0,0.08); border:1px solid rgba(255,149,0,0.3); border-radius:var(--radius-md); padding:12px 14px; margin-bottom:16px; font-size:13px;">
+        <strong style="color:#d97706; display:block; margin-bottom:4px;">⚠️ 총 ${dupNames.length}개 성명 (${players.filter(p => dupNames.includes((p.name||'').trim())).length}명) 중복 발견</strong>
+        동일한 이름을 가진 선수가 검색되었습니다. 실수로 중복 등록되었거나 동명이인인지 확인해 보세요.
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px; max-height:360px; overflow-y:auto; padding-right:4px;">
+    `;
+
+    dupNames.forEach(name => {
+      const matched = players.filter(p => (p.name || '').trim() === name);
+      html += `
+        <div style="background:var(--color-parchment); border:1px solid var(--color-hairline); border-radius:var(--radius-md); padding:12px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+            <span style="font-size:15px; font-weight:700; color:var(--color-ink);">'${escapeHtml(name)}' <span style="font-size:12px; color:#d97706; font-weight:600;">(${matched.length}명)</span></span>
+            <button class="btn-utility" style="font-size:11px; padding:3px 8px;" onclick="closeDuplicateModal(); setCategoryFilter('duplicate');">명단에서 보기</button>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            ${matched.map(p => `
+              <div style="display:flex; align-items:center; justify-content:space-between; background:#ffffff; padding:6px 10px; border-radius:6px; border:1px solid var(--color-hairline); font-size:12px;">
+                <div>
+                  <strong>${escapeHtml(p.school)}</strong> · ${escapeHtml(p.position)}
+                  <span style="color:var(--color-ink-muted); margin-left:6px;">
+                    (${[p.soccerM ? '축구(남)' : '', p.soccerW ? '축구(여)' : '', p.jokgu ? '족구' : '', p.badminton ? '배드민턴' : ''].filter(Boolean).join(', ') || '종목미참가'})
+                  </span>
+                </div>
+                <div style="display:flex; gap:4px;">
+                  <button class="btn-utility" style="font-size:11px; padding:2px 6px;" onclick="closeDuplicateModal(); editPlayer('${p.id}');">수정</button>
+                  <button class="btn-utility" style="font-size:11px; padding:2px 6px; color:var(--color-danger);" onclick="deletePlayer('${p.id}'); checkDuplicateNamesModal();">삭제</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+    container.innerHTML = html;
+  }
+
+  if (window.lucide) lucide.createIcons();
+  document.getElementById("duplicate-modal").classList.add("active");
+}
+
+function closeDuplicateModal() {
+  document.getElementById("duplicate-modal").classList.remove("active");
 }
 
 function filterRosterTable() {

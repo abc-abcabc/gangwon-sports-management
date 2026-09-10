@@ -209,12 +209,13 @@
             <span style="font-size:13px; color:var(--color-primary); font-weight:600;">원하시는 카테고리 탭을 클릭하여 항목별 명단을 확인하세요</span>
           </div>
 
-          <!-- 4 Category View Toggles -->
+          <!-- Category View Toggles -->
           <div class="sub-view-toggle" id="roster-category-toggles">
             <button id="view-btn-all" class="sub-view-btn active" onclick="setCategoryFilter('all')">전체 참가인원</button>
             <button id="view-btn-soccer" class="sub-view-btn" onclick="setCategoryFilter('soccer')">축구 참여인원</button>
             <button id="view-btn-jokgu" class="sub-view-btn" onclick="setCategoryFilter('jokgu')">족구 참여인원</button>
             <button id="view-btn-badminton" class="sub-view-btn" onclick="setCategoryFilter('badminton')">배드민턴 참여인원</button>
+            <button id="view-btn-duplicate" class="sub-view-btn warning-toggle-btn" style="display:none;" onclick="setCategoryFilter('duplicate')">⚠️ 중복 이름 (0명)</button>
           </div>
         </div>
 
@@ -261,8 +262,9 @@
               <span class="table-toolbar-title" id="active-category-title">전체 참가인원 명단</span>
               <span style="font-size:12px; color:var(--color-primary); font-weight:600;">💡 ⋮⋮ 끌어서 순서 변경 가능 (▲▼ 버튼 가능)</span>
             </div>
-            <div style="display:flex; align-items:center; gap:8px; width:100%; max-width:440px; justify-content:flex-end;">
+            <div style="display:flex; align-items:center; gap:8px; width:100%; max-width:520px; justify-content:flex-end;">
               <input type="text" id="roster-search" class="search-pill-input" placeholder="성명, 소속 검색..." oninput="filterRosterTable()">
+              <button class="btn-utility" style="color:#d97706; font-weight:600;" onclick="checkDuplicateNamesModal()"><i data-lucide="alert-triangle" style="width:13px;height:13px;"></i> 중복 검사</button>
               <button class="btn-utility" onclick="openAddPlayerModal()"><i data-lucide="user-plus" style="width:13px;height:13px;"></i> 선수 추가</button>
               <button class="btn-primary" style="padding:6px 14px; font-size:12px;" onclick="exportToCSV()"><i data-lucide="download" style="width:13px;height:13px;"></i> Excel 내보내기</button>
             </div>
@@ -737,6 +739,22 @@
           <button type="submit" class="btn-primary">결과 저장하기</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Duplicate Check Modal -->
+  <div class="modal-backdrop" id="duplicate-modal">
+    <div class="modal-card" style="max-width:540px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-duplicate-title">⚠️ 중복 이름 검사 결과</h3>
+        <button class="modal-close-btn" onclick="closeDuplicateModal()">&times;</button>
+      </div>
+      <div id="duplicate-modal-content" style="font-size:13px; color:var(--color-ink);">
+        <!-- Rendered dynamically via JS -->
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+        <button type="button" class="btn-primary" onclick="closeDuplicateModal()">확인 완료</button>
+      </div>
     </div>
   </div>
 

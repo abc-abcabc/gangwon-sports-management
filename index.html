@@ -256,9 +256,9 @@
           <div class="table-toolbar">
             <div class="table-toolbar-left">
               <span class="table-toolbar-title" id="active-category-title">전체 참가인원 명단</span>
-              <span style="font-size:12px; color:var(--color-primary); font-weight:600;">💡 ⋮⋮ 끌어서 순서 변경 가능 (▲▼ 버튼 가능)</span>
+              <span class="table-drag-hint">💡 ⋮⋮ 끌어서 순서 변경 가능 (▲▼ 버튼 가능)</span>
             </div>
-            <div style="display:flex; align-items:center; gap:8px; width:100%; max-width:520px; justify-content:flex-end;">
+            <div class="table-toolbar-actions">
               <input type="text" id="roster-search" class="search-pill-input" placeholder="성명, 소속 검색..." oninput="filterRosterTable()">
               <button class="btn-utility" style="color:#d97706; font-weight:600;" onclick="checkDuplicateNamesModal()"><i data-lucide="alert-triangle" style="width:13px;height:13px;"></i> 중복 검사</button>
               <button class="btn-utility" onclick="openAddPlayerModal()"><i data-lucide="user-plus" style="width:13px;height:13px;"></i> 선수 추가</button>

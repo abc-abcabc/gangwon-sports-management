@@ -123,6 +123,8 @@ const INITIAL_BRACKETS_DATA = {
 let currentTab = "overview";
 let currentCategoryFilter = "all";
 let currentBracketSport = "jokgu";
+let currentSortField = null;
+let currentSortDir = "asc";
 let playerDataStore = {};
 let bracketsDataStore = {};
 
@@ -450,6 +452,43 @@ function initRosterDragAndDrop() {
   rows.forEach(tr => setupRowDragEvents(tr));
 }
 
+function sortByField(field) {
+  if (currentSortField === field) {
+    if (currentSortDir === 'asc') {
+      currentSortDir = 'desc';
+    } else {
+      currentSortField = null;
+      currentSortDir = 'asc';
+    }
+  } else {
+    currentSortField = field;
+    currentSortDir = 'asc';
+  }
+
+  if (currentSortField) {
+    const players = playerDataStore.gangneung || [];
+    players.sort((a, b) => {
+      const valA = (a[currentSortField] || "").trim();
+      const valB = (b[currentSortField] || "").trim();
+      let cmp = valA.localeCompare(valB, 'ko');
+      if (cmp === 0) {
+        cmp = (a.name || "").trim().localeCompare((b.name || "").trim(), 'ko');
+      }
+      return currentSortDir === 'asc' ? cmp : -cmp;
+    });
+    saveStore();
+  }
+
+  renderRosterTable();
+}
+
+function getSortIndicator(field) {
+  if (currentSortField !== field) return `<span style="font-size:11px; color:var(--color-ink-muted); opacity:0.4; margin-left:3px;">↕</span>`;
+  return currentSortDir === 'asc' 
+    ? `<span style="font-size:11px; color:var(--color-primary); margin-left:3px; font-weight:bold;">▲</span>` 
+    : `<span style="font-size:11px; color:var(--color-primary); margin-left:3px; font-weight:bold;">▼</span>`;
+}
+
 function renderRosterTable() {
   const players = playerDataStore.gangneung || [];
   updateRosterStats();
@@ -501,9 +540,9 @@ function renderRosterTable() {
         <tr>
           <th class="cell-center" style="width:55px;">이동</th>
           <th style="width:40px;">연번</th>
-          <th style="min-width:125px;">소속(학교)</th>
-          <th style="min-width:85px;">직위</th>
-          <th style="min-width:140px;">성명</th>
+          <th onclick="sortByField('school')" style="min-width:125px; cursor:pointer; user-select:none;" title="클릭하여 학교별 정렬">소속(학교) ${getSortIndicator('school')}</th>
+          <th onclick="sortByField('position')" style="min-width:85px; cursor:pointer; user-select:none;" title="클릭하여 직위별 정렬">직위 ${getSortIndicator('position')}</th>
+          <th onclick="sortByField('name')" style="min-width:140px; cursor:pointer; user-select:none;" title="클릭하여 성명별 정렬">성명 ${getSortIndicator('name')}</th>
           <th class="cell-center" style="min-width:45px;">숙박</th>
           <th class="cell-center" style="min-width:65px;">24일만찬</th>
           <th class="cell-center" style="min-width:45px;">족구</th>
@@ -550,9 +589,9 @@ function renderRosterTable() {
         <tr>
           <th class="cell-center" style="width:55px;">이동</th>
           <th style="width:40px;">연번</th>
-          <th style="min-width:125px;">소속(학교)</th>
-          <th style="min-width:85px;">직위</th>
-          <th style="min-width:140px;">성명</th>
+          <th onclick="sortByField('school')" style="min-width:125px; cursor:pointer; user-select:none;" title="클릭하여 학교별 정렬">소속(학교) ${getSortIndicator('school')}</th>
+          <th onclick="sortByField('position')" style="min-width:85px; cursor:pointer; user-select:none;" title="클릭하여 직위별 정렬">직위 ${getSortIndicator('position')}</th>
+          <th onclick="sortByField('name')" style="min-width:140px; cursor:pointer; user-select:none;" title="클릭하여 성명별 정렬">성명 ${getSortIndicator('name')}</th>
           <th class="cell-center" style="min-width:70px;">구분</th>
           <th class="cell-center" style="min-width:65px;">숙박 여부</th>
           <th class="cell-center" style="min-width:65px;">24일 만찬</th>
@@ -593,9 +632,9 @@ function renderRosterTable() {
         <tr>
           <th class="cell-center" style="width:55px;">이동</th>
           <th style="width:40px;">연번</th>
-          <th style="min-width:125px;">소속(학교)</th>
-          <th style="min-width:85px;">직위</th>
-          <th style="min-width:140px;">성명</th>
+          <th onclick="sortByField('school')" style="min-width:125px; cursor:pointer; user-select:none;" title="클릭하여 학교별 정렬">소속(학교) ${getSortIndicator('school')}</th>
+          <th onclick="sortByField('position')" style="min-width:85px; cursor:pointer; user-select:none;" title="클릭하여 직위별 정렬">직위 ${getSortIndicator('position')}</th>
+          <th onclick="sortByField('name')" style="min-width:140px; cursor:pointer; user-select:none;" title="클릭하여 성명별 정렬">성명 ${getSortIndicator('name')}</th>
           <th class="cell-center" style="min-width:110px;">선수 자격 (교원2명 이상)</th>
           <th class="cell-center" style="min-width:65px;">숙박 여부</th>
           <th class="cell-center" style="min-width:65px;">24일 만찬</th>
@@ -636,9 +675,9 @@ function renderRosterTable() {
           <th class="cell-center" style="width:55px;">이동</th>
           <th style="width:40px;">연번</th>
           <th class="cell-center" style="min-width:65px;">출전급수</th>
-          <th style="min-width:125px;">학교 / 기관</th>
-          <th style="min-width:85px;">직위</th>
-          <th style="min-width:140px;">성명</th>
+          <th onclick="sortByField('school')" style="min-width:125px; cursor:pointer; user-select:none;" title="클릭하여 학교별 정렬">학교 / 기관 ${getSortIndicator('school')}</th>
+          <th onclick="sortByField('position')" style="min-width:85px; cursor:pointer; user-select:none;" title="클릭하여 직위별 정렬">직위 ${getSortIndicator('position')}</th>
+          <th onclick="sortByField('name')" style="min-width:140px; cursor:pointer; user-select:none;" title="클릭하여 성명별 정렬">성명 ${getSortIndicator('name')}</th>
           <th class="cell-center" style="min-width:45px;">성별</th>
           <th class="cell-center" style="min-width:55px;">등급</th>
           <th class="cell-center" style="min-width:45px;">숙박</th>

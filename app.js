@@ -26,7 +26,7 @@ const INITIAL_PLAYERS = {
     { id: "p4", school: "연곡초등학교", position: "교감", name: "선민영", stay: true, dinner: false, soccer: true, jokgu: true, badminton: false, note: "87년생이상(40대)", bGrade: "B", gender: "남" },
     { id: "p5", school: "성산초등학교", position: "교감", name: "김지승", stay: true, dinner: false, soccer: true, jokgu: true, badminton: false, note: "87년생이상(40대)", bGrade: "B", gender: "남" },
     { id: "p6", school: "강릉초등학교", position: "교장", name: "고문석", stay: true, dinner: false, soccer: false, jokgu: true, badminton: false, note: "", bGrade: "A", gender: "남" },
-    { id: "p7", school: "강릉교육지원청", position: "교육과장", name: "신창근", stay: true, dinner: false, soccer: false, jokgu: false, badminton: false, note: "고문", bGrade: "A", gender: "남" },
+    { id: "p7", school: "강릉교육지원청", position: "교육과장", name: "신창근", stay: true, dinner: false, soccer: false, jokgu: false, badminton: false, note: "고문님", bGrade: "A", gender: "남" },
     { id: "p8", school: "강릉교육지원청", position: "교육장", name: "강장혁", stay: false, dinner: false, soccer: false, jokgu: false, badminton: false, note: "단장", bGrade: "A", gender: "남" },
     { id: "p9", school: "강릉교육지원청", position: "장학사", name: "이정관", stay: false, dinner: false, soccer: false, jokgu: false, badminton: false, note: "주무", bGrade: "B", gender: "남" },
     { id: "p10", school: "노암초등학교", position: "교사", name: "김태익", stay: true, dinner: false, soccer: true, jokgu: false, badminton: false, note: "", bGrade: "B", gender: "남" },
@@ -208,7 +208,7 @@ function updateRosterStats() {
   const players = playerDataStore.gangneung || [];
 
   let totalCount = players.length;
-  let adminCount = players.filter(p => ["교장", "교감", "교육장", "교육과장", "장학사", "전문직", "고문"].includes(p.position) || (p.note || '').includes("고문") || (p.note || '').includes("관리자")).length;
+  let adminCount = players.filter(p => ["교장", "교감", "교육장", "교육과장", "장학사", "전문직", "고문", "고문님"].includes(p.position) || (p.note || '').includes("고문") || (p.note || '').includes("관리자")).length;
   let stayCount = players.filter(p => p.stay).length;
   let dinnerCount = players.filter(p => p.dinner).length;
   let soccerCount = players.filter(p => p.soccer || p.soccerM).length;
@@ -464,7 +464,7 @@ function renderRosterTable() {
   const tableEl = document.getElementById("roster-table");
   if (!tableEl) return;
 
-  const positionOptions = ["교사", "교장", "교감", "교육장", "교육과장", "장학사", "전문직", "고문"];
+  const positionOptions = ["교사", "교장", "교감", "교육장", "교육과장", "장학사", "전문직", "고문님"];
 
   if (currentCategoryFilter === "all" || currentCategoryFilter === "duplicate") {
     tableEl.innerHTML = `
@@ -587,7 +587,7 @@ function renderRosterTable() {
             </td>
             ${renderNameCellHtml(p, duplicateCounts, '#ff9500')}
             <td class="cell-center">
-              ${["교장", "교감", "전문직", "교육장", "교육과장", "장학사", "고문"].includes(p.position) ? '<span style="background:rgba(255,149,0,0.1); color:#ff9500; font-weight:700; padding:2px 8px; border-radius:9999px; font-size:11px;">고문/관리자 규정 충족</span>' : '<span style="color:var(--color-ink-muted); font-size:11px;">일반 교사</span>'}
+              ${["교장", "교감", "전문직", "교육장", "교육과장", "장학사", "고문", "고문님"].includes(p.position) ? '<span style="background:rgba(255,149,0,0.1); color:#ff9500; font-weight:700; padding:2px 8px; border-radius:9999px; font-size:11px;">고문님/관리자 규정 충족</span>' : '<span style="color:var(--color-ink-muted); font-size:11px;">일반 교사</span>'}
             </td>
             <td class="cell-center"><input type="checkbox" ${p.stay ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'stay')"></td>
             <td class="cell-center"><input type="checkbox" ${p.dinner ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'dinner')"></td>

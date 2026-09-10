@@ -1151,9 +1151,4 @@ body:not(.is-admin) .excel-table input[type="checkbox"] {
   opacity: 0.7;
 }
 
-body:not(.is-admin) .drag-handle,
-body:not(.is-admin) .drag-header {
-  display: none !important;
-}
-
 

@@ -440,7 +440,7 @@ let touchClone = null;
 
 function renderDragHandleHtml(playerId) {
   return `
-    <td class="drag-handle cell-center" title="드래그하거나 화살표로 순서 변경">
+    <td class="drag-handle cell-center admin-only" title="드래그하거나 화살표로 순서 변경">
       <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
         <button type="button" class="btn-move-step" onclick="movePlayerStep('${playerId}', -1, event)" title="위로 이동">▲</button>
         <span class="drag-grip" title="드래그하여 이동">
@@ -683,7 +683,7 @@ function renderRosterTable() {
     tableEl.innerHTML = `
       <thead>
         <tr>
-          <th class="cell-center" style="width:55px;">이동</th>
+          <th class="cell-center admin-only" style="width:55px;">이동</th>
           <th style="width:40px;">연번</th>
           <th onclick="sortByField('school')" style="min-width:125px; cursor:pointer; user-select:none;" title="클릭하여 학교별 정렬">소속(학교) ${getSortIndicator('school')}</th>
           <th onclick="sortByField('position')" style="min-width:85px; cursor:pointer; user-select:none;" title="클릭하여 직위별 정렬">직위 ${getSortIndicator('position')}</th>
@@ -694,7 +694,7 @@ function renderRosterTable() {
           <th class="cell-center" style="min-width:55px;">축구</th>
           <th class="cell-center" style="min-width:60px;">배드민턴</th>
           <th style="min-width:120px;">비고</th>
-          <th class="cell-center" style="min-width:45px;">삭제</th>
+          <th class="cell-center admin-only" style="min-width:45px;">삭제</th>
         </tr>
       </thead>
       <tbody>
@@ -732,7 +732,7 @@ function renderRosterTable() {
     tableEl.innerHTML = `
       <thead>
         <tr>
-          <th class="cell-center" style="width:55px;">이동</th>
+          <th class="cell-center admin-only" style="width:55px;">이동</th>
           <th style="width:40px;">연번</th>
           <th onclick="sortByField('school')" style="min-width:125px; cursor:pointer; user-select:none;" title="클릭하여 학교별 정렬">소속(학교) ${getSortIndicator('school')}</th>
           <th onclick="sortByField('position')" style="min-width:85px; cursor:pointer; user-select:none;" title="클릭하여 직위별 정렬">직위 ${getSortIndicator('position')}</th>
@@ -741,7 +741,7 @@ function renderRosterTable() {
           <th class="cell-center" style="min-width:65px;">숙박 여부</th>
           <th class="cell-center" style="min-width:65px;">24일 만찬</th>
           <th style="min-width:120px;">비고 (연령 등)</th>
-          <th class="cell-center" style="min-width:45px;">삭제</th>
+          <th class="cell-center admin-only" style="min-width:45px;">삭제</th>
         </tr>
       </thead>
       <tbody>
@@ -775,7 +775,7 @@ function renderRosterTable() {
     tableEl.innerHTML = `
       <thead>
         <tr>
-          <th class="cell-center" style="width:55px;">이동</th>
+          <th class="cell-center admin-only" style="width:55px;">이동</th>
           <th style="width:40px;">연번</th>
           <th onclick="sortByField('school')" style="min-width:125px; cursor:pointer; user-select:none;" title="클릭하여 학교별 정렬">소속(학교) ${getSortIndicator('school')}</th>
           <th onclick="sortByField('position')" style="min-width:85px; cursor:pointer; user-select:none;" title="클릭하여 직위별 정렬">직위 ${getSortIndicator('position')}</th>
@@ -784,7 +784,7 @@ function renderRosterTable() {
           <th class="cell-center" style="min-width:65px;">숙박 여부</th>
           <th class="cell-center" style="min-width:65px;">24일 만찬</th>
           <th style="min-width:120px;">비고</th>
-          <th class="cell-center" style="min-width:45px;">삭제</th>
+          <th class="cell-center admin-only" style="min-width:45px;">삭제</th>
         </tr>
       </thead>
       <tbody>
@@ -817,7 +817,7 @@ function renderRosterTable() {
     tableEl.innerHTML = `
       <thead>
         <tr>
-          <th class="cell-center" style="width:55px;">이동</th>
+          <th class="cell-center admin-only" style="width:55px;">이동</th>
           <th style="width:40px;">연번</th>
           <th class="cell-center" style="min-width:65px;">출전급수</th>
           <th onclick="sortByField('school')" style="min-width:125px; cursor:pointer; user-select:none;" title="클릭하여 학교별 정렬">학교 / 기관 ${getSortIndicator('school')}</th>
@@ -827,7 +827,7 @@ function renderRosterTable() {
           <th class="cell-center" style="min-width:55px;">등급</th>
           <th class="cell-center" style="min-width:45px;">숙박</th>
           <th style="min-width:120px;">비고</th>
-          <th class="cell-center" style="min-width:45px;">삭제</th>
+          <th class="cell-center admin-only" style="min-width:45px;">삭제</th>
         </tr>
       </thead>
       <tbody>

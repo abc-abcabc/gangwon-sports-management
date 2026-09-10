@@ -205,20 +205,44 @@ const INITIAL_LODGING_PLACES = [
   }
 ];
 
-// Load State from LocalStorage
+// Load State from LocalStorage (with backward-compatible recovery across versions)
 function initStore() {
-  const savedData = localStorage.getItem("GANGWON_PE_STORE_GANGNEUNG_V6");
-  if (savedData) {
-    try {
-      playerDataStore = JSON.parse(savedData);
-      if (!playerDataStore.gangneung) playerDataStore = INITIAL_PLAYERS;
-    } catch(e) {
-      playerDataStore = INITIAL_PLAYERS;
+  const possibleKeys = [
+    "GANGWON_PE_STORE_GANGNEUNG_V6",
+    "GANGWON_PE_STORE_GANGNEUNG_V5",
+    "GANGWON_PE_STORE_GANGNEUNG_V4",
+    "GANGWON_PE_STORE_GANGNEUNG_V3",
+    "GANGWON_PE_STORE_GANGNEUNG_V2",
+    "GANGWON_PE_STORE_GANGNEUNG_V1",
+    "GANGWON_PE_STORE_GANGNEUNG",
+    "gangwon_pe_players"
+  ];
+
+  let restoredData = null;
+  for (const key of possibleKeys) {
+    const saved = localStorage.getItem(key);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed) {
+          if (parsed.gangneung && Array.isArray(parsed.gangneung) && parsed.gangneung.length > 0) {
+            restoredData = parsed;
+            break;
+          } else if (Array.isArray(parsed) && parsed.length > 0) {
+            restoredData = { gangneung: parsed };
+            break;
+          }
+        }
+      } catch(e) {}
     }
+  }
+
+  if (restoredData) {
+    playerDataStore = restoredData;
   } else {
     playerDataStore = INITIAL_PLAYERS;
-    saveStore();
   }
+  saveStore();
 
   const savedBrackets = localStorage.getItem("GANGWON_BRACKETS_STORE_V8");
   if (savedBrackets) {

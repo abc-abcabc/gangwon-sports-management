@@ -129,6 +129,7 @@ let currentDiningFilterDate = "all";
 let playerDataStore = {};
 let bracketsDataStore = {};
 let diningPlacesDataStore = [];
+let lodgingPlacesDataStore = [];
 
 const INITIAL_DINING_PLACES = [
   {
@@ -177,6 +178,33 @@ const INITIAL_DINING_PLACES = [
   }
 ];
 
+const INITIAL_LODGING_PLACES = [
+  {
+    id: "l1",
+    name: "삼척 쏠비치 리조트",
+    address: "강원 삼척시 수로부인길 453",
+    phone: "1588-4888",
+    category: "임원/선수단",
+    note: "10.24(토) 강릉지회 임원 및 본부 숙박 지정 리조트 (15:00 입실)"
+  },
+  {
+    id: "l2",
+    name: "삼척 관광호텔 (삼척 온천)",
+    address: "강원 삼척시 우지길 49",
+    phone: "033-570-8800",
+    category: "선수단 숙소",
+    note: "경기장 차량 10분 거리, 객실 단체 지정 예약 완료 구역"
+  },
+  {
+    id: "l3",
+    name: "삼척 맹방 해변 펜션단지",
+    address: "강원 삼척시 근덕면 맹방해변로 12",
+    phone: "033-572-0000",
+    category: "지회 숙소",
+    note: "선수단 대형 주차 공간 확보 및 사전 입실 가능"
+  }
+];
+
 // Load State from LocalStorage
 function initStore() {
   const savedData = localStorage.getItem("GANGWON_PE_STORE_GANGNEUNG_V6");
@@ -205,6 +233,7 @@ function initStore() {
   }
 
   initDiningStore();
+  initLodgingStore();
 }
 
 function initDiningStore() {
@@ -223,6 +252,24 @@ function initDiningStore() {
 
 function saveDiningStore() {
   localStorage.setItem("GANGWON_DINING_STORE_V1", JSON.stringify(diningPlacesDataStore));
+}
+
+function initLodgingStore() {
+  const savedLodging = localStorage.getItem("GANGWON_LODGING_STORE_V1");
+  if (savedLodging) {
+    try {
+      lodgingPlacesDataStore = JSON.parse(savedLodging);
+    } catch(e) {
+      lodgingPlacesDataStore = INITIAL_LODGING_PLACES;
+    }
+  } else {
+    lodgingPlacesDataStore = INITIAL_LODGING_PLACES;
+    saveLodgingStore();
+  }
+}
+
+function saveLodgingStore() {
+  localStorage.setItem("GANGWON_LODGING_STORE_V1", JSON.stringify(lodgingPlacesDataStore));
 }
 
 function saveStore() {
@@ -249,7 +296,10 @@ function switchTab(tabId) {
 
   if (tabId === "roster") renderRosterPage();
   if (tabId === "brackets") renderBracketsPage();
-  if (tabId === "venues") renderDiningPlaces(currentDiningFilterDate);
+  if (tabId === "venues") {
+    renderDiningPlaces(currentDiningFilterDate);
+    renderLodgingPlaces();
+  }
 }
 
 // 4. D-Day Countdown Calculation
@@ -1125,7 +1175,10 @@ function renderDiningPlaces(filterDate = 'all') {
           <div class="venue-header-banner" style="background:var(--color-surface);">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
               <span class="venue-badge" style="background:${badgeBg}; font-weight:700;">${escapeHtml(d.dateLabel || d.date)} · ${escapeHtml(d.mealType || '식사')}</span>
-              <button onclick="deleteDiningPlace('${d.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px; padding:0 4px;" title="식사 장소 삭제">&times;</button>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <button class="btn-secondary" style="font-size:11.5px; padding:3px 9px;" onclick="editDiningPlace('${d.id}')">✏️ 수정</button>
+                <button onclick="deleteDiningPlace('${d.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px; padding:0 4px;" title="식사 장소 삭제">&times;</button>
+              </div>
             </div>
             <h3 style="font-size:18px; font-weight:700; color:var(--color-ink); margin-top:6px;">${escapeHtml(d.name)}</h3>
           </div>
@@ -1149,6 +1202,27 @@ function renderDiningPlaces(filterDate = 'all') {
 function openAddDiningModal() {
   const form = document.getElementById("dining-modal-form");
   if (form) form.reset();
+  document.getElementById("dining-form-id").value = "";
+  document.getElementById("modal-dining-title").textContent = "🍽️ 식사 장소 추가 등록";
+  document.getElementById("btn-save-dining").textContent = "장소 저장하기";
+  document.getElementById("dining-modal")?.classList.add("active");
+}
+
+function editDiningPlace(id) {
+  const item = (diningPlacesDataStore || []).find(x => x.id === id);
+  if (!item) return;
+
+  document.getElementById("dining-form-id").value = item.id;
+  document.getElementById("dining-form-date").value = item.date || "10.24";
+  document.getElementById("dining-form-meal").value = item.mealType || "석식 만찬";
+  document.getElementById("dining-form-name").value = item.name || "";
+  document.getElementById("dining-form-address").value = item.address || "";
+  document.getElementById("dining-form-phone").value = item.phone || "";
+  document.getElementById("dining-form-category").value = item.category || "";
+  document.getElementById("dining-form-note").value = item.note || "";
+
+  document.getElementById("modal-dining-title").textContent = "✏️ 식사 장소 정보 수정";
+  document.getElementById("btn-save-dining").textContent = "수정 완료";
   document.getElementById("dining-modal")?.classList.add("active");
 }
 
@@ -1157,6 +1231,7 @@ function closeDiningModal() {
 }
 
 function saveDiningFromModal() {
+  const diningId = document.getElementById("dining-form-id").value;
   const dateVal = document.getElementById("dining-form-date").value;
   const mealVal = document.getElementById("dining-form-meal").value;
   const nameVal = (document.getElementById("dining-form-name").value || "").trim();
@@ -1171,19 +1246,34 @@ function saveDiningFromModal() {
   }
 
   const dateLabel = dateVal === "10.24" ? "10월 24일(토)" : "10월 25일(일)";
-  const newItem = {
-    id: "dining_" + Date.now(),
-    date: dateVal,
-    dateLabel: dateLabel,
-    mealType: mealVal,
-    name: nameVal,
-    address: addressVal,
-    phone: phoneVal,
-    category: categoryVal || "식사안내",
-    note: noteVal
-  };
 
-  diningPlacesDataStore.unshift(newItem);
+  if (diningId) {
+    const item = (diningPlacesDataStore || []).find(x => x.id === diningId);
+    if (item) {
+      item.date = dateVal;
+      item.dateLabel = dateLabel;
+      item.mealType = mealVal;
+      item.name = nameVal;
+      item.address = addressVal;
+      item.phone = phoneVal;
+      item.category = categoryVal || "식사안내";
+      item.note = noteVal;
+    }
+  } else {
+    const newItem = {
+      id: "dining_" + Date.now(),
+      date: dateVal,
+      dateLabel: dateLabel,
+      mealType: mealVal,
+      name: nameVal,
+      address: addressVal,
+      phone: phoneVal,
+      category: categoryVal || "식사안내",
+      note: noteVal
+    };
+    diningPlacesDataStore.unshift(newItem);
+  }
+
   saveDiningStore();
   closeDiningModal();
   renderDiningPlaces(currentDiningFilterDate);
@@ -1196,10 +1286,135 @@ function deleteDiningPlace(id) {
   renderDiningPlaces(currentDiningFilterDate);
 }
 
-// 11. App Initialization on DOM Loaded
+// 11. Lodging Venues Management Logic
+function renderLodgingPlaces() {
+  const area = document.getElementById("lodging-places-render-area");
+  if (!area) return;
+
+  let list = lodgingPlacesDataStore || [];
+  if (list.length === 0) {
+    area.innerHTML = `
+      <div style="grid-column:1/-1; text-align:center; padding:40px; background:var(--color-surface); border-radius:var(--radius-md); color:var(--color-ink-muted);">
+        <p style="font-size:15px; margin-bottom:8px;">등록된 숙소 정보가 없습니다.</p>
+        <span style="font-size:12px;">'숙소 추가' 버튼을 눌러 선수단 숙박 장소를 등록하세요.</span>
+      </div>
+    `;
+    return;
+  }
+
+  area.innerHTML = list.map(l => {
+    const mapQuery = encodeURIComponent(l.address || l.name);
+
+    return `
+      <div class="venue-card" style="border:1px solid rgba(0,0,0,0.06); display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+          <div class="venue-header-banner" style="background:var(--color-surface);">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <span class="venue-badge" style="background:#af52de; font-weight:700;">🏨 ${escapeHtml(l.category || '숙소')}</span>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <button class="btn-secondary" style="font-size:11.5px; padding:3px 9px;" onclick="editLodgingPlace('${l.id}')">✏️ 수정</button>
+                <button onclick="deleteLodgingPlace('${l.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px; padding:0 4px;" title="숙소 삭제">&times;</button>
+              </div>
+            </div>
+            <h3 style="font-size:18px; font-weight:700; color:var(--color-ink); margin-top:6px;">${escapeHtml(l.name)}</h3>
+          </div>
+          <div class="venue-body" style="padding:16px 20px 8px 20px;">
+            <p style="font-size:13px; color:var(--color-ink); margin-bottom:8px;">📍 <strong>주소:</strong> ${escapeHtml(l.address || '주소 미입력')}</p>
+            ${l.phone ? `<p style="font-size:13px; color:var(--color-ink-muted); margin-bottom:8px;">📞 <strong>연락처:</strong> ${escapeHtml(l.phone)}</p>` : ''}
+            <div style="background:var(--color-parchment); padding:10px 12px; border-radius:var(--radius-sm); font-size:12.5px; margin-top:10px; line-height:1.5;">
+              <strong>안내 및 예약 정보:</strong><br>
+              ${escapeHtml(l.note || '별도 안내사항 없음')}
+            </div>
+          </div>
+        </div>
+        <div style="padding:0 20px 20px 20px;">
+          <button class="btn-secondary" style="width:100%; font-size:12.5px;" onclick="window.open('https://map.naver.com/v5/search/${mapQuery}', '_blank')">🗺️ 네이버 지도에서 길찾기</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function openAddLodgingModal() {
+  const form = document.getElementById("lodging-modal-form");
+  if (form) form.reset();
+  document.getElementById("lodging-form-id").value = "";
+  document.getElementById("modal-lodging-title").textContent = "🏨 숙소 정보 추가 등록";
+  document.getElementById("btn-save-lodging").textContent = "숙소 저장하기";
+  document.getElementById("lodging-modal")?.classList.add("active");
+}
+
+function editLodgingPlace(id) {
+  const item = (lodgingPlacesDataStore || []).find(x => x.id === id);
+  if (!item) return;
+
+  document.getElementById("lodging-form-id").value = item.id;
+  document.getElementById("lodging-form-name").value = item.name || "";
+  document.getElementById("lodging-form-address").value = item.address || "";
+  document.getElementById("lodging-form-phone").value = item.phone || "";
+  document.getElementById("lodging-form-category").value = item.category || "";
+  document.getElementById("lodging-form-note").value = item.note || "";
+
+  document.getElementById("modal-lodging-title").textContent = "✏️ 숙소 정보 수정";
+  document.getElementById("btn-save-lodging").textContent = "수정 완료";
+  document.getElementById("lodging-modal")?.classList.add("active");
+}
+
+function closeLodgingModal() {
+  document.getElementById("lodging-modal")?.classList.remove("active");
+}
+
+function saveLodgingFromModal() {
+  const lodgingId = document.getElementById("lodging-form-id").value;
+  const nameVal = (document.getElementById("lodging-form-name").value || "").trim();
+  const addressVal = (document.getElementById("lodging-form-address").value || "").trim();
+  const phoneVal = (document.getElementById("lodging-form-phone").value || "").trim();
+  const categoryVal = (document.getElementById("lodging-form-category").value || "").trim();
+  const noteVal = (document.getElementById("lodging-form-note").value || "").trim();
+
+  if (!nameVal || !addressVal) {
+    alert("숙소명과 주소를 입력해주세요.");
+    return;
+  }
+
+  if (lodgingId) {
+    const item = (lodgingPlacesDataStore || []).find(x => x.id === lodgingId);
+    if (item) {
+      item.name = nameVal;
+      item.address = addressVal;
+      item.phone = phoneVal;
+      item.category = categoryVal || "선수단 숙소";
+      item.note = noteVal;
+    }
+  } else {
+    const newItem = {
+      id: "lodging_" + Date.now(),
+      name: nameVal,
+      address: addressVal,
+      phone: phoneVal,
+      category: categoryVal || "선수단 숙소",
+      note: noteVal
+    };
+    lodgingPlacesDataStore.unshift(newItem);
+  }
+
+  saveLodgingStore();
+  closeLodgingModal();
+  renderLodgingPlaces();
+}
+
+function deleteLodgingPlace(id) {
+  if (!confirm("선택한 숙소 정보를 삭제하시겠습니까?")) return;
+  lodgingPlacesDataStore = lodgingPlacesDataStore.filter(x => x.id !== id);
+  saveLodgingStore();
+  renderLodgingPlaces();
+}
+
+// 12. App Initialization on DOM Loaded
 document.addEventListener("DOMContentLoaded", () => {
   initStore();
   updateCountdown();
   switchTab("overview");
   renderDiningPlaces();
+  renderLodgingPlaces();
 });

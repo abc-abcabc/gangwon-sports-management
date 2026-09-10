@@ -46,7 +46,7 @@
         <button class="nav-tab" data-tab="roster" onclick="switchTab('roster')">참가·선수 관리</button>
         <button class="nav-tab" data-tab="brackets" onclick="switchTab('brackets')">대진표·경기일정</button>
         <button class="nav-tab" data-tab="rules" onclick="switchTab('rules')">경기 운영방법</button>
-        <button class="nav-tab" data-tab="venues" onclick="switchTab('venues')">경기장 안내 및 식사 안내</button>
+        <button class="nav-tab" data-tab="venues" onclick="switchTab('venues')">경기장·식사·숙소 안내</button>
         <button class="nav-tab" data-tab="awards" onclick="switchTab('awards')">시상·전년도 기록</button>
       </div>
     </nav>
@@ -464,6 +464,20 @@
           </div>
         </div>
 
+        <!-- Section 3: Lodging Venues -->
+        <div style="padding-top:36px; margin-top:36px; border-top:2px solid var(--color-hairline);">
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+            <div>
+              <h3 class="display-md" style="font-size:22px; margin:0; color:var(--color-ink);">🏨 선수단 숙소 및 숙박 장소 안내</h3>
+            </div>
+            <button class="btn-primary" style="padding:6px 14px; font-size:12px;" onclick="openAddLodgingModal()"><i data-lucide="plus-circle" style="width:13px;height:13px;"></i> 숙소 추가</button>
+          </div>
+
+          <div id="lodging-places-render-area" class="venue-grid">
+            <!-- Dynamically rendered via JS -->
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -849,14 +863,15 @@
     </div>
   </div>
 
-  <!-- Modal: Add Dining Venue -->
+  <!-- Modal: Add / Edit Dining Venue -->
   <div class="modal-backdrop" id="dining-modal">
     <div class="modal-card" style="max-width:500px;">
       <div class="modal-header">
-        <h3 class="modal-title">🍽️ 식사 장소 추가 등록</h3>
+        <h3 class="modal-title" id="modal-dining-title">🍽️ 식사 장소 추가 등록</h3>
         <button class="modal-close-btn" onclick="closeDiningModal()">&times;</button>
       </div>
       <form id="dining-modal-form" onsubmit="event.preventDefault(); saveDiningFromModal();">
+        <input type="hidden" id="dining-form-id">
         <div class="form-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
           <div class="form-group">
             <label class="form-label">이용 일자</label>
@@ -868,7 +883,7 @@
           <div class="form-group">
             <label class="form-label">식사 구분</label>
             <select id="dining-form-meal" class="form-select" required>
-              <option value="석식만찬">석식 만찬 (24일)</option>
+              <option value="석식 만찬">석식 만찬 (24일)</option>
               <option value="중식">중식 (25일)</option>
               <option value="조식">조식</option>
               <option value="기타 모임">기타 모임/식사</option>
@@ -904,7 +919,50 @@
 
         <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:20px;">
           <button type="button" class="btn-secondary" onclick="closeDiningModal()">취소</button>
-          <button type="submit" class="btn-primary">장소 등록하기</button>
+          <button type="submit" id="btn-save-dining" class="btn-primary">장소 저장하기</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add / Edit Lodging Venue -->
+  <div class="modal-backdrop" id="lodging-modal">
+    <div class="modal-card" style="max-width:500px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-lodging-title">🏨 숙소 정보 등록</h3>
+        <button class="modal-close-btn" onclick="closeLodgingModal()">&times;</button>
+      </div>
+      <form id="lodging-modal-form" onsubmit="event.preventDefault(); saveLodgingFromModal();">
+        <input type="hidden" id="lodging-form-id">
+        <div class="form-group">
+          <label class="form-label">숙소명 / 건물명</label>
+          <input type="text" id="lodging-form-name" class="form-input" placeholder="예: 삼척 쏠비치 리조트" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">위치 / 도로명 주소</label>
+          <input type="text" id="lodging-form-address" class="form-input" placeholder="예: 강원 삼척시 수로부인길 453" required>
+        </div>
+
+        <div class="form-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label class="form-label">전화번호 / 연락처</label>
+            <input type="text" id="lodging-form-phone" class="form-input" placeholder="예: 033-570-0000">
+          </div>
+          <div class="form-group">
+            <label class="form-label">구분 태그</label>
+            <input type="text" id="lodging-form-category" class="form-input" placeholder="예: 선수단 숙소, 지정 호텔">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">객실 및 예약 비고</label>
+          <input type="text" id="lodging-form-note" class="form-input" placeholder="예: 10.24(토) 15객실 단체 예약, 15:00 입실">
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:20px;">
+          <button type="button" class="btn-secondary" onclick="closeLodgingModal()">취소</button>
+          <button type="submit" id="btn-save-lodging" class="btn-primary">숙소 저장하기</button>
         </div>
       </form>
     </div>
@@ -918,7 +976,7 @@
         <a href="#" class="footer-link" onclick="switchTab('roster')">참가 신청 및 선수단 관리</a>
         <a href="#" class="footer-link" onclick="switchTab('brackets')">종목별 대진표</a>
         <a href="#" class="footer-link" onclick="switchTab('rules')">종목별 경기 운영방법</a>
-        <a href="#" class="footer-link" onclick="switchTab('venues')">경기장 및 식사 안내</a>
+        <a href="#" class="footer-link" onclick="switchTab('venues')">경기장·식사·숙소 안내</a>
         <a href="#" class="footer-link" onclick="switchTab('awards')">시상 규정 및 전년도 결과</a>
       </div>
       <p>주최: 강원특별자치도교육청 | 주관: 강원초등체육연구회, 강릉지회</p>

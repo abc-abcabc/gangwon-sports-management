@@ -1112,96 +1112,93 @@ function handleExcelUpload(event) {
         return;
       }
 
-      let addedCount = 0;
-      let updatedCount = 0;
-      const players = playerDataStore.gangneung;
+      const checkBool = (val) => {
+        if (val === null || val === undefined) return false;
+        if (typeof val === 'boolean') return val;
+        if (typeof val === 'number') return val > 0;
+        const s = String(val).trim().toUpperCase();
+        return (
+          s === 'O' || s === '0' || s === 'Y' || s === 'YES' || s === '예' || 
+          s === 'TRUE' || s === '1' || s === '참여' || s === '신청' || 
+          s === 'V' || s === '✔' || s === '✓' || s === '☑' || s === '당일'
+        );
+      };
 
-      rows.forEach((row) => {
-        // Find name & school keys (case-insensitive & multiple aliases)
-        const nameKey = Object.keys(row).find(k => /성명|이름|선수명|Name/i.test(k));
+      const newPlayersList = [];
+
+      rows.forEach((row, idx) => {
+        // Find name key
+        const nameKey = Object.keys(row).find(k => /성명|이름|선수명|교원명|Name/i.test(k.trim()));
         const name = nameKey ? String(row[nameKey]).trim() : '';
 
-        if (!name) return; // 이름 없는 행 스킵
+        if (!name) return; // 이름 없는 빈 행 스킵
 
-        const schoolKey = Object.keys(row).find(k => /소속|학교|School/i.test(k));
+        const schoolKey = Object.keys(row).find(k => /소속|학교|기관|School/i.test(k.trim()));
         const school = schoolKey ? String(row[schoolKey]).trim() : '강릉교육지원청';
 
-        const posKey = Object.keys(row).find(k => /직위|직급|Position/i.test(k));
+        const posKey = Object.keys(row).find(k => /직위|직급|직책|Position/i.test(k.trim()));
         const position = posKey ? String(row[posKey]).trim() : '교사';
 
-        const genderKey = Object.keys(row).find(k => /성별|Gender/i.test(k));
+        const genderKey = Object.keys(row).find(k => /성별|Gender/i.test(k.trim()));
         const gender = genderKey ? String(row[genderKey]).trim() : '남';
 
-        const sportKey = Object.keys(row).find(k => /종목|참가종목|Sport/i.test(k));
+        const sportKey = Object.keys(row).find(k => /종목|참가종목|Sport/i.test(k.trim()));
         const sportVal = sportKey ? String(row[sportKey]).trim() : '';
 
-        // Check specific sport columns if available
-        const jokguKey = Object.keys(row).find(k => /^족구$/i.test(k));
-        const soccerKey = Object.keys(row).find(k => /^축구$/i.test(k));
-        const badmKey = Object.keys(row).find(k => /^배드민턴$/i.test(k));
+        // Check specific sport columns
+        const jokguKey = Object.keys(row).find(k => /^족구$/i.test(k.trim()));
+        const soccerKey = Object.keys(row).find(k => /^축구$/i.test(k.trim()));
+        const badmKey = Object.keys(row).find(k => /^배드민턴$/i.test(k.trim()));
 
-        const checkBool = (val) => {
-          if (!val) return false;
-          const s = String(val).trim().toUpperCase();
-          return s === 'O' || s === 'Y' || s === '예' || s === 'TRUE' || s === '1' || s === '참여';
-        };
+        const isJokgu = (jokguKey && checkBool(row[jokguKey])) || /족구/i.test(sportVal);
+        const isSoccer = (soccerKey && checkBool(row[soccerKey])) || /축구/i.test(sportVal);
+        const isBadminton = (badmKey && checkBool(row[badmKey])) || /배드민턴/i.test(sportVal);
 
-        const isJokgu = checkBool(row[jokguKey]) || /족구/i.test(sportVal);
-        const isSoccer = checkBool(row[soccerKey]) || /축구/i.test(sportVal);
-        const isBadminton = checkBool(row[badmKey]) || /배드민턴/i.test(sportVal);
+        const stayKey = Object.keys(row).find(k => /숙박/i.test(k.trim()));
+        const isStay = stayKey ? checkBool(row[stayKey]) : false;
 
-        const stayKey = Object.keys(row).find(k => /숙박/i.test(k));
-        const isStay = checkBool(row[stayKey]);
+        const dinnerKey = Object.keys(row).find(k => /석식|만찬|식사/i.test(k.trim()));
+        const isDinner = dinnerKey ? checkBool(row[dinnerKey]) : false;
 
-        const dinnerKey = Object.keys(row).find(k => /석식|만찬|식사/i.test(k));
-        const isDinner = checkBool(row[dinnerKey]);
-
-        const phoneKey = Object.keys(row).find(k => /연락처|전화|Phone/i.test(k));
+        const phoneKey = Object.keys(row).find(k => /연락처|전화|Phone|휴대폰/i.test(k.trim()));
         const phone = phoneKey ? String(row[phoneKey]).trim() : '';
 
-        const noteKey = Object.keys(row).find(k => /비고|Note/i.test(k));
+        const noteKey = Object.keys(row).find(k => /비고|Note|메모/i.test(k.trim()));
         const note = noteKey ? String(row[noteKey]).trim() : '';
 
-        // Check existing player by Name + School
-        const existingIndex = players.findIndex(p => p.name === name && p.school === school);
+        const gradeKey = Object.keys(row).find(k => /출전급수|급수|등급|Grade/i.test(k.trim()));
+        const gradeVal = gradeKey ? String(row[gradeKey]).trim().toUpperCase() : 'A';
+        const bGrade = gradeVal.includes('B') ? 'B' : (gradeVal.includes('C') ? 'C' : (gradeVal.includes('D') ? 'D' : 'A'));
 
-        if (existingIndex >= 0) {
-          // Update existing
-          players[existingIndex].position = position || players[existingIndex].position;
-          players[existingIndex].gender = gender || players[existingIndex].gender;
-          if (isJokgu) players[existingIndex].jokgu = true;
-          if (isSoccer) { players[existingIndex].soccer = true; players[existingIndex].soccerM = true; }
-          if (isBadminton) players[existingIndex].badminton = true;
-          if (stayKey) players[existingIndex].stay = isStay;
-          if (dinnerKey) players[existingIndex].dinner = isDinner;
-          if (phone) players[existingIndex].phone = phone;
-          if (note) players[existingIndex].note = note;
-          updatedCount++;
-        } else {
-          // Create new player
-          const newPlayer = {
-            id: Date.now() + Math.random().toString(36).substr(2, 5),
-            name: name,
-            school: school,
-            position: position,
-            gender: gender,
-            jokgu: isJokgu,
-            soccer: isSoccer,
-            soccerM: isSoccer,
-            badminton: isBadminton,
-            stay: isStay,
-            dinner: isDinner,
-            phone: phone,
-            note: note
-          };
-          players.push(newPlayer);
-          addedCount++;
-        }
+        newPlayersList.push({
+          id: "p_" + Date.now() + "_" + (idx + 1) + "_" + Math.random().toString(36).substr(2, 4),
+          name: name,
+          school: school,
+          position: position,
+          gender: gender,
+          soccer: isSoccer,
+          soccerM: isSoccer,
+          jokgu: isJokgu,
+          badminton: isBadminton,
+          stay: isStay,
+          dinner: isDinner,
+          phone: phone,
+          note: note,
+          bGrade: bGrade
+        });
       });
 
+      if (newPlayersList.length === 0) {
+        alert("업로드한 엑셀 파일에서 유효한 선수 데이터를 찾을 수 없습니다. 성명 컬럼이 올바른지 확인해주세요.");
+        return;
+      }
+
+      // 업로드한 엑셀 파일의 데이터 그대로 전체 교체 적용
+      playerDataStore.gangneung = newPlayersList;
       saveStore();
       renderRosterPage();
-      alert(`🎉 엑셀 업로드 완료!\n신규 등록: ${addedCount}명 / 기존 수정: ${updatedCount}명`);
+
+      alert(`🎉 엑셀 업로드 완료!\n총 ${newPlayersList.length}명의 선수 명단이 엑셀 데이터 그대로 최신 반영되었습니다.`);
     } catch (err) {
       console.error("Excel Read Error:", err);
       alert("엑셀 파일을 읽는 중 오류가 발생했습니다. 올바른 엑셀 양식인지 확인해 주세요.");

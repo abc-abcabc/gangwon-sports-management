@@ -1390,33 +1390,31 @@ function renderDiningPlaces(filterDate = 'all') {
 
   area.innerHTML = list.map(d => {
     const is24 = d.date === "10.24";
-    const badgeBg = is24 ? "#ff9500" : "var(--color-primary)";
+    // Dining color theme: Warm Coral / Red tones (differentiated from venues)
+    const badgeBg = is24 ? "#ff3b30" : "#ff6200";
+    const badgeText = d.category ? `${escapeHtml(d.date || '')} ${escapeHtml(d.category)}` : `${escapeHtml(d.date ? d.date + ' ' : '')}${escapeHtml(d.mealType || '식사')}`;
     const mapQuery = encodeURIComponent(d.address || d.name);
 
     return `
-      <div class="venue-card" style="border:1px solid rgba(0,0,0,0.06); display:flex; flex-direction:column; justify-content:space-between;">
-        <div>
-          <div class="venue-header-banner" style="background:var(--color-surface);">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-              <span class="venue-badge" style="background:${badgeBg}; font-weight:700;">${escapeHtml(d.dateLabel || d.date)} · ${escapeHtml(d.mealType || '식사')}</span>
-              <div style="display:flex; align-items:center; gap:6px;">
-                <button class="btn-secondary admin-only" style="font-size:11.5px; padding:3px 9px;" onclick="editDiningPlace('${d.id}')">✏️ 수정</button>
-                <button class="admin-only" onclick="deleteDiningPlace('${d.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px; padding:0 4px;" title="식사 장소 삭제">&times;</button>
-              </div>
-            </div>
-            <h3 style="font-size:18px; font-weight:700; color:var(--color-ink); margin-top:6px;">${escapeHtml(d.name)}</h3>
+      <div class="venue-card">
+        <div class="venue-header-banner">
+          <div style="position:absolute; top:12px; right:12px; display:flex; align-items:center; gap:6px;">
+            <button class="admin-only" style="background:rgba(255,255,255,0.22); color:#fff; border:1px solid rgba(255,255,255,0.4); font-size:11px; padding:2px 8px; border-radius:var(--radius-pill); cursor:pointer;" onclick="editDiningPlace('${d.id}')">✏️ 수정</button>
+            <button class="admin-only" onclick="deleteDiningPlace('${d.id}')" style="background:rgba(255,59,48,0.7); border:none; color:#fff; cursor:pointer; font-size:13px; width:20px; height:20px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; padding:0; line-height:1;" title="식사 장소 삭제">&times;</button>
+            <span class="venue-badge" style="position:static; background:${badgeBg};">${badgeText}</span>
           </div>
-          <div class="venue-body" style="padding:16px 20px 8px 20px;">
-            <p style="font-size:13px; color:var(--color-ink); margin-bottom:8px;">📍 <strong>주소:</strong> ${escapeHtml(d.address || '주소 미입력')}</p>
-            ${d.phone ? `<p style="font-size:13px; color:var(--color-ink-muted); margin-bottom:8px;">📞 <strong>연락처:</strong> ${escapeHtml(d.phone)}</p>` : ''}
-            <div style="background:var(--color-parchment); padding:10px 12px; border-radius:var(--radius-sm); font-size:12.5px; margin-top:10px; line-height:1.5;">
-              <strong>안내 및 비고:</strong><br>
-              ${escapeHtml(d.note || '별도 비고 없음')}
-            </div>
-          </div>
+          <h3 style="font-size:18px; font-weight:700; color:#ffffff; margin:0; word-break:keep-all;">${escapeHtml(d.name)}</h3>
         </div>
-        <div style="padding:0 20px 20px 20px;">
-          <button class="btn-secondary" style="width:100%; font-size:12.5px;" onclick="window.open('https://map.naver.com/v5/search/${mapQuery}', '_blank')">🗺️ 네이버 지도에서 길찾기</button>
+        <div class="venue-body">
+          <div>
+            <p style="font-size:13px; color:var(--color-ink-muted); margin-bottom:10px;">📍 주소: ${escapeHtml(d.address || '주소 미입력')}</p>
+            ${d.phone ? `<p style="font-size:13px; color:var(--color-ink-muted); margin-bottom:10px;">📞 연락처: ${escapeHtml(d.phone)}</p>` : ''}
+            <div style="background:var(--color-parchment); padding:10px; border-radius:var(--radius-sm); font-size:12px; margin-bottom:14px; line-height:1.5;">
+              <strong>안내 및 비고:</strong><br>
+              ${escapeHtml(d.note || '별도 비고 없음').replace(/\n/g, '<br>')}
+            </div>
+          </div>
+          <button class="btn-secondary" style="width:100%; font-size:13px;" onclick="window.open('https://map.naver.com/v5/search/${mapQuery}', '_blank')">네이버 지도 열기</button>
         </div>
       </div>
     `;
@@ -1530,32 +1528,31 @@ function renderLodgingPlaces() {
   }
 
   area.innerHTML = list.map(l => {
+    // Lodging color theme: Apple Purple / Violet (differentiated from venues & dining)
+    const badgeBg = "#af52de";
+    const badgeText = escapeHtml(l.category || '선수단 숙소');
     const mapQuery = encodeURIComponent(l.address || l.name);
 
     return `
-      <div class="venue-card" style="border:1px solid rgba(0,0,0,0.06); display:flex; flex-direction:column; justify-content:space-between;">
-        <div>
-          <div class="venue-header-banner" style="background:var(--color-surface);">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-              <span class="venue-badge" style="background:#af52de; font-weight:700;">🏨 ${escapeHtml(l.category || '숙소')}</span>
-              <div style="display:flex; align-items:center; gap:6px;">
-                <button class="btn-secondary admin-only" style="font-size:11.5px; padding:3px 9px;" onclick="editLodgingPlace('${l.id}')">✏️ 수정</button>
-                <button class="admin-only" onclick="deleteLodgingPlace('${l.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px; padding:0 4px;" title="숙소 삭제">&times;</button>
-              </div>
-            </div>
-            <h3 style="font-size:18px; font-weight:700; color:var(--color-ink); margin-top:6px;">${escapeHtml(l.name)}</h3>
+      <div class="venue-card">
+        <div class="venue-header-banner">
+          <div style="position:absolute; top:12px; right:12px; display:flex; align-items:center; gap:6px;">
+            <button class="admin-only" style="background:rgba(255,255,255,0.22); color:#fff; border:1px solid rgba(255,255,255,0.4); font-size:11px; padding:2px 8px; border-radius:var(--radius-pill); cursor:pointer;" onclick="editLodgingPlace('${l.id}')">✏️ 수정</button>
+            <button class="admin-only" onclick="deleteLodgingPlace('${l.id}')" style="background:rgba(255,59,48,0.7); border:none; color:#fff; cursor:pointer; font-size:13px; width:20px; height:20px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; padding:0; line-height:1;" title="숙소 삭제">&times;</button>
+            <span class="venue-badge" style="position:static; background:${badgeBg};">${badgeText}</span>
           </div>
-          <div class="venue-body" style="padding:16px 20px 8px 20px;">
-            <p style="font-size:13px; color:var(--color-ink); margin-bottom:8px;">📍 <strong>주소:</strong> ${escapeHtml(l.address || '주소 미입력')}</p>
-            ${l.phone ? `<p style="font-size:13px; color:var(--color-ink-muted); margin-bottom:8px;">📞 <strong>연락처:</strong> ${escapeHtml(l.phone)}</p>` : ''}
-            <div style="background:var(--color-parchment); padding:10px 12px; border-radius:var(--radius-sm); font-size:12.5px; margin-top:10px; line-height:1.5;">
-              <strong>안내 및 예약 정보:</strong><br>
-              ${escapeHtml(l.note || '별도 안내사항 없음')}
-            </div>
-          </div>
+          <h3 style="font-size:18px; font-weight:700; color:#ffffff; margin:0; word-break:keep-all;">${escapeHtml(l.name)}</h3>
         </div>
-        <div style="padding:0 20px 20px 20px;">
-          <button class="btn-secondary" style="width:100%; font-size:12.5px;" onclick="window.open('https://map.naver.com/v5/search/${mapQuery}', '_blank')">🗺️ 네이버 지도에서 길찾기</button>
+        <div class="venue-body">
+          <div>
+            <p style="font-size:13px; color:var(--color-ink-muted); margin-bottom:10px;">📍 주소: ${escapeHtml(l.address || '주소 미입력')}</p>
+            ${l.phone ? `<p style="font-size:13px; color:var(--color-ink-muted); margin-bottom:10px;">📞 연락처: ${escapeHtml(l.phone)}</p>` : ''}
+            <div style="background:var(--color-parchment); padding:10px; border-radius:var(--radius-sm); font-size:12px; margin-bottom:14px; line-height:1.5;">
+              <strong>안내 및 예약 정보:</strong><br>
+              ${escapeHtml(l.note || '별도 안내사항 없음').replace(/\n/g, '<br>')}
+            </div>
+          </div>
+          <button class="btn-secondary" style="width:100%; font-size:13px;" onclick="window.open('https://map.naver.com/v5/search/${mapQuery}', '_blank')">네이버 지도 열기</button>
         </div>
       </div>
     `;

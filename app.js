@@ -20,25 +20,37 @@ const GANGWON_REGIONS = [
 
 const INITIAL_PLAYERS = {
   gangneung: [
-    { id: "p1", school: "남산초등학교", position: "교장", name: "김석남", stay: true, dinner: false, soccer: false, jokgu: false, badminton: false, note: "", bGrade: "A", gender: "남" },
-    { id: "p2", school: "금광초등학교", position: "교장", name: "김진홍", stay: true, dinner: false, soccer: false, jokgu: false, badminton: false, note: "", bGrade: "A", gender: "남" },
-    { id: "p3", school: "주영초등학교", position: "교감", name: "박상우", stay: true, dinner: false, soccer: true, jokgu: false, badminton: false, note: "87년생이상(40대)", bGrade: "B", gender: "남" },
-    { id: "p4", school: "연곡초등학교", position: "교감", name: "선민영", stay: true, dinner: false, soccer: true, jokgu: true, badminton: false, note: "87년생이상(40대)", bGrade: "B", gender: "남" },
-    { id: "p5", school: "성산초등학교", position: "교감", name: "김지승", stay: true, dinner: false, soccer: true, jokgu: true, badminton: false, note: "87년생이상(40대)", bGrade: "B", gender: "남" },
-    { id: "p6", school: "강릉초등학교", position: "교장", name: "고문석", stay: true, dinner: false, soccer: false, jokgu: true, badminton: false, note: "", bGrade: "A", gender: "남" },
-    { id: "p7", school: "강릉교육지원청", position: "교육과장", name: "신창근", stay: true, dinner: false, soccer: false, jokgu: false, badminton: false, note: "고문님", bGrade: "A", gender: "남" },
-    { id: "p8", school: "강릉교육지원청", position: "교육장", name: "강장혁", stay: false, dinner: false, soccer: false, jokgu: false, badminton: false, note: "단장", bGrade: "A", gender: "남" },
-    { id: "p9", school: "강릉교육지원청", position: "장학사", name: "이정관", stay: false, dinner: false, soccer: false, jokgu: false, badminton: false, note: "주무", bGrade: "B", gender: "남" },
-    { id: "p10", school: "노암초등학교", position: "교사", name: "김태익", stay: true, dinner: false, soccer: true, jokgu: false, badminton: false, note: "", bGrade: "B", gender: "남" },
-    { id: "p11", school: "초당초등학교", position: "교사", name: "김남준", stay: true, dinner: false, soccer: true, jokgu: false, badminton: false, note: "", bGrade: "C", gender: "남" },
-    { id: "p12", school: "남산초등학교", position: "교사", name: "김동수", stay: true, dinner: false, soccer: true, jokgu: false, badminton: false, note: "", bGrade: "C", gender: "남" },
-    { id: "p13", school: "교동초등학교", position: "교사", name: "김종완", stay: true, dinner: false, soccer: true, jokgu: false, badminton: false, note: "", bGrade: "B", gender: "남" },
-    { id: "p14", school: "경포초등학교", position: "교사", name: "남기민", stay: true, dinner: false, soccer: true, jokgu: true, badminton: false, note: "", bGrade: "C", gender: "남" },
-    { id: "p15", school: "중앙초등학교", position: "교사", name: "백서현", stay: true, dinner: false, soccer: true, jokgu: false, badminton: false, note: "", bGrade: "C", gender: "남" },
-    { id: "p16", school: "한솔초등학교", position: "교사", name: "신보식", stay: true, dinner: false, soccer: true, jokgu: false, badminton: false, note: "", bGrade: "D", gender: "남" },
-    { id: "p17", school: "한솔초등학교", position: "교사", name: "정의석", stay: false, dinner: false, soccer: false, jokgu: true, badminton: true, note: "배드민턴 A조", bGrade: "A", gender: "남" },
-    { id: "p18", school: "율곡초등학교", position: "교사", name: "이소연", stay: true, dinner: true, soccer: false, jokgu: false, badminton: true, note: "", bGrade: "B", gender: "여" },
-    { id: "p19", school: "명주초등학교", position: "교사", name: "최은경", stay: true, dinner: true, soccer: false, jokgu: false, badminton: false, note: "", bGrade: "C", gender: "여" }
+    { id: "p1", school: "강릉교육지원청", position: "교육장", name: "강장혁", stay: false, dinner: false, soccer: false, jokgu: false, badminton: false, note: "", bGrade: "A", gender: "남" },
+    { id: "p2", school: "강릉교육지원청", position: "교육과장", name: "신창근", stay: true, dinner: false, soccer: false, jokgu: false, badminton: false, note: "", bGrade: "A", gender: "남" },
+    { id: "p3", school: "강릉교육지원청", position: "장학사", name: "이정관", stay: false, dinner: false, soccer: false, jokgu: false, badminton: false, note: "", bGrade: "B", gender: "남" },
+    { id: "p4", school: "강릉초등학교", position: "교장", name: "고문석", stay: true, dinner: true, soccer: true, jokgu: false, badminton: false, note: "", bGrade: "A", gender: "남" },
+    { id: "p5", school: "경포초등학교", position: "교사", name: "남기민", stay: true, dinner: true, soccer: true, jokgu: true, badminton: false, note: "", bGrade: "C", gender: "남" },
+    { id: "p6", school: "교동초등학교", position: "교사", name: "김종완", stay: true, dinner: true, soccer: false, jokgu: true, badminton: false, note: "", bGrade: "B", gender: "남" },
+    { id: "p7", school: "금광초등학교", position: "교장", name: "김진홍", stay: true, dinner: true, soccer: false, jokgu: false, badminton: false, note: "", bGrade: "A", gender: "남" },
+    { id: "p8", school: "남산초등학교", position: "교사", name: "김동수", stay: true, dinner: true, soccer: false, jokgu: true, badminton: false, note: "", bGrade: "C", gender: "남" },
+    { id: "p9", school: "남산초등학교", position: "교장", name: "김석남", stay: true, dinner: true, soccer: false, jokgu: false, badminton: false, note: "", bGrade: "A", gender: "남" },
+    { id: "p10", school: "남산초등학교", position: "교사", name: "모범석", stay: true, dinner: true, soccer: false, jokgu: false, badminton: false, note: "", bGrade: "B", gender: "남" },
+    { id: "p11", school: "남산초등학교", position: "교사", name: "최문홍", stay: true, dinner: true, soccer: false, jokgu: true, badminton: false, note: "", bGrade: "C", gender: "남" },
+    { id: "p12", school: "노암초등학교", position: "교사", name: "김태익", stay: true, dinner: true, soccer: false, jokgu: true, badminton: false, note: "", bGrade: "B", gender: "남" },
+    { id: "p13", school: "노암초등학교", position: "교사", name: "장진수", stay: true, dinner: true, soccer: false, jokgu: false, badminton: false, note: "", bGrade: "C", gender: "남" },
+    { id: "p14", school: "노암초등학교", position: "교사", name: "조형욱", stay: false, dinner: false, soccer: false, jokgu: true, badminton: false, note: "", bGrade: "C", gender: "남" },
+    { id: "p15", school: "사천초등학교", position: "교사", name: "정주찬", stay: false, dinner: false, soccer: false, jokgu: false, badminton: true, note: "", bGrade: "A", gender: "남" },
+    { id: "p16", school: "성덕초등학교", position: "교사", name: "신민수", stay: false, dinner: false, soccer: false, jokgu: true, badminton: false, note: "", bGrade: "C", gender: "남" },
+    { id: "p17", school: "성산초등학교", position: "교감", name: "김지승", stay: true, dinner: true, soccer: true, jokgu: true, badminton: false, note: "", bGrade: "B", gender: "남" },
+    { id: "p18", school: "성산초등학교", position: "교사", name: "전봉훈", stay: false, dinner: false, soccer: false, jokgu: true, badminton: false, note: "", bGrade: "C", gender: "남" },
+    { id: "p19", school: "송양초등학교", position: "교사", name: "권훈용", stay: false, dinner: true, soccer: false, jokgu: true, badminton: false, note: "", bGrade: "C", gender: "남" },
+    { id: "p20", school: "연곡초등학교", position: "교감", name: "선민영", stay: true, dinner: true, soccer: true, jokgu: true, badminton: false, note: "", bGrade: "B", gender: "남" },
+    { id: "p21", school: "왕산초등학교", position: "교사", name: "김동영", stay: false, dinner: false, soccer: false, jokgu: true, badminton: false, note: "", bGrade: "C", gender: "남" },
+    { id: "p22", school: "왕산초등학교", position: "교사", name: "최재진", stay: false, dinner: false, soccer: false, jokgu: false, badminton: true, note: "", bGrade: "A", gender: "남" },
+    { id: "p23", school: "주문진초등학교", position: "교사", name: "최봉석", stay: true, dinner: true, soccer: false, jokgu: false, badminton: false, note: "", bGrade: "C", gender: "남" },
+    { id: "p24", school: "주영초등학교", position: "교감", name: "박상우", stay: true, dinner: true, soccer: false, jokgu: true, badminton: false, note: "", bGrade: "B", gender: "남" },
+    { id: "p25", school: "주영초등학교", position: "교사", name: "심재용", stay: true, dinner: true, soccer: false, jokgu: false, badminton: false, note: "", bGrade: "C", gender: "남" },
+    { id: "p26", school: "중앙초등학교", position: "교사", name: "김경룡", stay: true, dinner: true, soccer: false, jokgu: false, badminton: false, note: "", bGrade: "C", gender: "남" },
+    { id: "p27", school: "중앙초등학교", position: "교사", name: "백서현", stay: true, dinner: true, soccer: false, jokgu: true, badminton: false, note: "", bGrade: "C", gender: "남" },
+    { id: "p28", school: "초당초등학교", position: "교사", name: "김남준", stay: true, dinner: true, soccer: false, jokgu: true, badminton: false, note: "", bGrade: "C", gender: "남" },
+    { id: "p29", school: "초당초등학교", position: "교사", name: "허태규", stay: true, dinner: true, soccer: false, jokgu: false, badminton: false, note: "", bGrade: "C", gender: "남" },
+    { id: "p30", school: "한솔초등학교", position: "교사", name: "신보식", stay: true, dinner: true, soccer: false, jokgu: true, badminton: false, note: "", bGrade: "D", gender: "남" },
+    { id: "p31", school: "한솔초등학교", position: "교사", name: "정의석", stay: false, dinner: false, soccer: true, jokgu: false, badminton: false, note: "", bGrade: "A", gender: "남" }
   ]
 };
 
@@ -207,39 +219,21 @@ const INITIAL_LODGING_PLACES = [
 
 // Load State from LocalStorage (with backward-compatible recovery across versions)
 function initStore() {
-  const possibleKeys = [
-    "GANGWON_PE_STORE_GANGNEUNG_V6",
-    "GANGWON_PE_STORE_GANGNEUNG_V5",
-    "GANGWON_PE_STORE_GANGNEUNG_V4",
-    "GANGWON_PE_STORE_GANGNEUNG_V3",
-    "GANGWON_PE_STORE_GANGNEUNG_V2",
-    "GANGWON_PE_STORE_GANGNEUNG_V1",
-    "GANGWON_PE_STORE_GANGNEUNG",
-    "gangwon_pe_players"
-  ];
-
-  let restoredData = null;
-  for (const key of possibleKeys) {
-    const saved = localStorage.getItem(key);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (parsed) {
-          if (parsed.gangneung && Array.isArray(parsed.gangneung) && parsed.gangneung.length > 0) {
-            restoredData = parsed;
-            break;
-          } else if (Array.isArray(parsed) && parsed.length > 0) {
-            restoredData = { gangneung: parsed };
-            break;
-          }
-        }
-      } catch(e) {}
+  const currentKey = "GANGWON_PE_STORE_GANGNEUNG_V7";
+  const savedV7 = localStorage.getItem(currentKey);
+  if (savedV7) {
+    try {
+      const parsed = JSON.parse(savedV7);
+      if (parsed && parsed.gangneung && Array.isArray(parsed.gangneung) && parsed.gangneung.length > 0) {
+        playerDataStore = parsed;
+      } else {
+        playerDataStore = INITIAL_PLAYERS;
+      }
+    } catch(e) {
+      playerDataStore = INITIAL_PLAYERS;
     }
-  }
-
-  if (restoredData) {
-    playerDataStore = restoredData;
   } else {
+    // New or updated version: initialize with full 31 INITIAL_PLAYERS
     playerDataStore = INITIAL_PLAYERS;
   }
   saveStore();
@@ -297,7 +291,7 @@ function saveLodgingStore() {
 }
 
 function saveStore() {
-  localStorage.setItem("GANGWON_PE_STORE_GANGNEUNG_V6", JSON.stringify(playerDataStore));
+  localStorage.setItem("GANGWON_PE_STORE_GANGNEUNG_V7", JSON.stringify(playerDataStore));
 }
 
 function saveBracketsStore() {
@@ -690,8 +684,8 @@ function renderRosterTable() {
           <th onclick="sortByField('name')" style="min-width:140px; cursor:pointer; user-select:none;" title="클릭하여 성명별 정렬">성명 ${getSortIndicator('name')}</th>
           <th class="cell-center" style="min-width:45px;">숙박</th>
           <th class="cell-center" style="min-width:65px;">24일만찬</th>
-          <th class="cell-center" style="min-width:45px;">족구</th>
           <th class="cell-center" style="min-width:55px;">축구</th>
+          <th class="cell-center" style="min-width:45px;">족구</th>
           <th class="cell-center" style="min-width:60px;">배드민턴</th>
           <th style="min-width:120px;">비고</th>
           <th class="cell-center admin-only" style="min-width:45px;">삭제</th>
@@ -714,8 +708,8 @@ function renderRosterTable() {
             ${renderNameCellHtml(p, duplicateCounts, 'var(--color-ink)')}
             <td class="cell-center"><input type="checkbox" ${p.stay ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'stay')"></td>
             <td class="cell-center"><input type="checkbox" ${p.dinner ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'dinner')"></td>
-            <td class="cell-center"><input type="checkbox" ${p.jokgu ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'jokgu')"></td>
             <td class="cell-center"><input type="checkbox" ${p.soccer || p.soccerM ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'soccer')"></td>
+            <td class="cell-center"><input type="checkbox" ${p.jokgu ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'jokgu')"></td>
             <td class="cell-center"><input type="checkbox" ${p.badminton ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'badminton')"></td>
             <td>
               <input type="text" class="cell-direct-input" style="font-size:12px; color:var(--color-ink-muted);" value="${escapeHtml(p.note || '')}" placeholder="비고 입력" oninput="updatePlayerDirect('${p.id}', 'note', this.value)">
@@ -1237,8 +1231,8 @@ function exportToCSV() {
       "성별": p.gender || '남',
       "숙박여부": p.stay ? 'O' : 'X',
       "24일석식만찬": p.dinner ? 'O' : 'X',
-      "족구": p.jokgu ? 'O' : 'X',
       "축구": (p.soccer || p.soccerM) ? 'O' : 'X',
+      "족구": p.jokgu ? 'O' : 'X',
       "배드민턴": p.badminton ? 'O' : 'X',
       "연락처": p.phone || '',
       "비고": p.note || ''
@@ -1250,9 +1244,9 @@ function exportToCSV() {
     XLSX.writeFile(wb, `제31회_강원초등교원체육대회_강릉선수단명단.xlsx`);
   } else {
     // Fallback to CSV
-    let csvContent = "\uFEFF연번,소속(학교),직위,성명,성별,숙박여부,24일석식만찬,족구,축구,배드민턴,연락처,비고\n";
+    let csvContent = "\uFEFF연번,소속(학교),직위,성명,성별,숙박여부,24일석식만찬,축구,족구,배드민턴,연락처,비고\n";
     players.forEach((p, idx) => {
-      csvContent += `${idx + 1},"${p.school}","${p.position}","${p.name}","${p.gender || '남'}",${p.stay ? 'O' : 'X'},${p.dinner ? 'O' : 'X'},${p.jokgu ? 'O' : 'X'},${p.soccer || p.soccerM ? 'O' : 'X'},${p.badminton ? 'O' : 'X'},"${p.phone || ''}","${p.note || ''}"\n`;
+      csvContent += `${idx + 1},"${p.school}","${p.position}","${p.name}","${p.gender || '남'}",${p.stay ? 'O' : 'X'},${p.dinner ? 'O' : 'X'},${p.soccer || p.soccerM ? 'O' : 'X'},${p.jokgu ? 'O' : 'X'},${p.badminton ? 'O' : 'X'},"${p.phone || ''}","${p.note || ''}"\n`;
     });
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -1657,7 +1651,7 @@ function deleteLodgingPlace(id) {
 let isAdminMode = false;
 
 function getAdminPassword() {
-  return localStorage.getItem('GANGWON_ADMIN_PASSWORD') || '1234';
+  return localStorage.getItem('GANGWON_ADMIN_PASSWORD') || '9999';
 }
 
 function setAdminPassword(newPassword) {
@@ -1675,85 +1669,70 @@ function initAdminAuth() {
   } else {
     isAdminMode = false;
   }
-  updateAdminUI();
-}
 
-function ensureAdminAuthorized() {
-  if (!isAdminMode) {
-    alert("🔒 관리자 권한이 필요합니다. 헤더 상단의 [관리자 로그인] 버튼을 눌러 비밀번호를 입력해주세요.");
-    openAdminModal();
-    return false;
-  }
-  return true;
+  updateAdminUI();
 }
 
 function handleAdminAuthClick() {
   if (isAdminMode) {
-    if (confirm("관리자 모드를 로그아웃(일반 열람 모드로 전환)하시겠습니까?")) {
+    if (window.confirm("관리자 모드를 로그아웃(일반 열람 모드로 전환)하시겠습니까?")) {
       isAdminMode = false;
       sessionStorage.removeItem('GANGWON_IS_ADMIN');
       updateAdminUI();
-      alert("👁️ 일반 열람 모드로 전환되었습니다.");
+      window.alert("👁️ 일반 열람 모드로 전환되었습니다.");
     }
   } else {
-    openAdminModal();
+    doAdminLogin();
   }
+}
+
+function doAdminLogin() {
+  const pw = window.prompt("🔑 관리자 비밀번호를 입력하세요:");
+  if (pw === null) return false;
+  if (pw === getAdminPassword()) {
+    isAdminMode = true;
+    sessionStorage.setItem('GANGWON_IS_ADMIN', 'true');
+    updateAdminUI();
+    window.alert("🔓 관리자 인증 성공!\n수정 권한이 활성화되었습니다.");
+    return true;
+  } else {
+    window.alert("❌ 비밀번호가 올바르지 않습니다. 다시 확인해 주세요.");
+    return false;
+  }
+}
+
+function ensureAdminAuthorized() {
+  if (isAdminMode) return true;
+  return doAdminLogin();
 }
 
 function openAdminModal() {
-  const modal = document.getElementById("admin-modal");
-  const input = document.getElementById("admin-password-input");
-  if (modal) {
-    modal.style.display = "flex";
-    if (input) {
-      input.value = "";
-      setTimeout(() => input.focus(), 100);
-    }
-  }
+  doAdminLogin();
 }
 
 function closeAdminModal() {
-  const modal = document.getElementById("admin-modal");
-  if (modal) modal.style.display = "none";
+  // no-op (modal is now handled via native prompt)
 }
 
 function handleAdminLoginSubmit(e) {
   if (e) e.preventDefault();
-  const input = document.getElementById("admin-password-input");
-  const enteredPw = input ? input.value.trim() : '';
-
-  if (enteredPw === getAdminPassword()) {
-    isAdminMode = true;
-    sessionStorage.setItem('GANGWON_IS_ADMIN', 'true');
-    updateAdminUI();
-    closeAdminModal();
-    alert("🔓 관리자 인증 성공! 수정 권한이 활성화되었습니다.");
-  } else {
-    alert("❌ 비밀번호가 올바르지 않습니다. 다시 확인해 주세요.");
-    if (input) {
-      input.value = "";
-      input.focus();
-    }
-  }
+  doAdminLogin();
 }
 
 function changeAdminPasswordPrompt() {
-  const currentPw = prompt("현재 관리자 비밀번호를 입력하세요:");
+  const currentPw = window.prompt("현재 관리자 비밀번호를 입력하세요:");
   if (currentPw === null) return;
-
   if (currentPw !== getAdminPassword()) {
-    alert("❌ 현재 비밀번호가 일치하지 않습니다.");
+    window.alert("❌ 현재 비밀번호가 일치하지 않습니다.");
     return;
   }
-
-  const newPw = prompt("새로운 관리자 비밀번호를 입력하세요:");
+  const newPw = window.prompt("새로운 관리자 비밀번호를 입력하세요:");
   if (!newPw || !newPw.trim()) {
-    alert("비밀번호가 변경되지 않았습니다.");
+    window.alert("비밀번호가 변경되지 않았습니다.");
     return;
   }
-
   setAdminPassword(newPw.trim());
-  alert("🎉 관리자 비밀번호가 성공적으로 변경되었습니다!");
+  window.alert("🎉 관리자 비밀번호가 성공적으로 변경되었습니다!");
 }
 
 function updateAdminUI() {
@@ -1767,15 +1746,19 @@ function updateAdminUI() {
   }
   if (btnAuth) {
     btnAuth.title = isAdminMode ? "관리자 모드 활성화됨 (클릭 시 로그아웃)" : "관리자 로그인";
+    btnAuth.style.background = isAdminMode ? "#34c759" : "";
+    btnAuth.style.borderColor = isAdminMode ? "#34c759" : "";
   }
 
-  if (typeof currentTab !== 'undefined' && currentTab) {
-    switchTab(currentTab);
-  } else {
-    if (typeof renderRosterPage === 'function') renderRosterPage();
-  }
+  try {
+    if (typeof currentTab !== 'undefined' && currentTab) {
+      switchTab(currentTab);
+    }
+  } catch (err) { /* ignore */ }
 
-  if (typeof lucide !== 'undefined') lucide.createIcons();
+  try {
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  } catch (err) { /* ignore */ }
 }
 
 // 13. App Initialization on DOM Loaded
@@ -1787,3 +1770,6 @@ document.addEventListener("DOMContentLoaded", () => {
   renderDiningPlaces();
   renderLodgingPlaces();
 });
+
+
+

@@ -1,0 +1,9 @@
+{
+  "name": "강릉초등체육연구회",
+  "short_name": "강릉초등체육연구회",
+  "description": "제31회 강원초등교원체육대회 참가 및 선수단 관리 시스템",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0066cc"
+}

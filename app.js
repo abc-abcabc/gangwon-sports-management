@@ -1521,7 +1521,7 @@ function renderLodgingPlaces() {
     area.innerHTML = `
       <div style="grid-column:1/-1; text-align:center; padding:40px; background:var(--color-surface); border-radius:var(--radius-md); color:var(--color-ink-muted);">
         <p style="font-size:15px; margin-bottom:8px;">등록된 숙소 정보가 없습니다.</p>
-        <span style="font-size:12px;">'숙소 추가' 버튼을 눌러 선수단 숙박 장소를 등록하세요.</span>
+        <span style="font-size:12px;">'숙소 장소 추가' 버튼을 눌러 선수단 숙박 장소를 등록하세요.</span>
       </div>
     `;
     return;

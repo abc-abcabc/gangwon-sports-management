@@ -1,6 +1,6 @@
 {
-  "name": "강릉초등체육연구회",
-  "short_name": "강릉초등체육연구회",
+  "name": "강릉초등체육연구회-제31회 강원초등교원체육대회",
+  "short_name": "강릉초등체육연구회-제31회 강원초등교원체육대회",
   "description": "제31회 강원초등교원체육대회 참가 및 선수단 관리 시스템",
   "start_url": "./index.html",
   "display": "standalone",

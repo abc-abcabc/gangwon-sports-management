@@ -466,7 +466,7 @@ function movePlayerStep(playerId, direction, event) {
 
   let list = players;
   if (currentCategoryFilter === "soccer") {
-    list = players.filter(p => p.soccerM || p.soccerW);
+    list = players.filter(p => p.soccer || p.soccerM || p.soccerW);
   } else if (currentCategoryFilter === "jokgu") {
     list = players.filter(p => p.jokgu);
   } else if (currentCategoryFilter === "badminton") {
@@ -636,7 +636,7 @@ function renderRosterTable() {
   const dupNamesList = Object.keys(duplicateCounts).filter(n => duplicateCounts[n] > 1);
   const totalDuplicatePlayersCount = players.filter(p => dupNamesList.includes((p.name || '').trim())).length;
 
-  const soccerTotalCount = players.filter(p => p.soccerM || p.soccerW).length;
+  const soccerTotalCount = players.filter(p => p.soccer || p.soccerM || p.soccerW).length;
   const jokguCount = players.filter(p => p.jokgu).length;
   const badmintonCount = players.filter(p => p.badminton).length;
 
@@ -653,7 +653,7 @@ function renderRosterTable() {
   let categoryFiltered = players;
 
   if (currentCategoryFilter === "soccer") {
-    categoryFiltered = players.filter(p => p.soccerM || p.soccerW);
+    categoryFiltered = players.filter(p => p.soccer || p.soccerM || p.soccerW);
   } else if (currentCategoryFilter === "jokgu") {
     categoryFiltered = players.filter(p => p.jokgu);
   } else if (currentCategoryFilter === "badminton") {
@@ -751,8 +751,7 @@ function renderRosterTable() {
             </td>
             ${renderNameCellHtml(p, duplicateCounts, 'var(--color-primary)')}
             <td class="cell-center">
-              ${p.soccerM ? '<span style="background:rgba(0,102,204,0.1); color:var(--color-primary); padding:2px 8px; border-radius:9999px; font-weight:600; font-size:11px;">축구(남)</span>' : ''}
-              ${p.soccerW ? '<span style="background:rgba(175,82,222,0.1); color:#af52de; padding:2px 8px; border-radius:9999px; font-weight:600; font-size:11px;">축구(여)</span>' : ''}
+              ${p.soccerW ? '<span style="background:rgba(175,82,222,0.1); color:#af52de; padding:2px 8px; border-radius:9999px; font-weight:600; font-size:11px;">축구(여)</span>' : '<span style="background:rgba(0,102,204,0.1); color:var(--color-primary); padding:2px 8px; border-radius:9999px; font-weight:600; font-size:11px;">축구 선수</span>'}
             </td>
             <td class="cell-center"><input type="checkbox" ${p.stay ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'stay')"></td>
             <td class="cell-center"><input type="checkbox" ${p.dinner ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'dinner')"></td>
@@ -818,7 +817,6 @@ function renderRosterTable() {
           <th onclick="sortByField('position')" style="min-width:85px; cursor:pointer; user-select:none;" title="클릭하여 직위별 정렬">직위 ${getSortIndicator('position')}</th>
           <th onclick="sortByField('name')" style="min-width:140px; cursor:pointer; user-select:none;" title="클릭하여 성명별 정렬">성명 ${getSortIndicator('name')}</th>
           <th class="cell-center" style="min-width:45px;">성별</th>
-          <th class="cell-center" style="min-width:55px;">등급</th>
           <th class="cell-center" style="min-width:45px;">숙박</th>
           <th style="min-width:120px;">비고</th>
           <th class="cell-center admin-only" style="min-width:45px;">삭제</th>
@@ -838,7 +836,6 @@ function renderRosterTable() {
             </td>
             ${renderNameCellHtml(p, duplicateCounts, '#34c759')}
             <td class="cell-center">${p.gender || '남'}</td>
-            <td class="cell-center"><span style="font-weight:600; color:var(--color-primary);">${p.bGrade || 'A'}등급</span></td>
             <td class="cell-center"><input type="checkbox" ${p.stay ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'stay')"></td>
             <td><input type="text" class="cell-direct-input" style="font-size:12px; color:var(--color-ink-muted);" value="${escapeHtml(p.note || '')}" placeholder="비고" oninput="updatePlayerDirect('${p.id}', 'note', this.value)"></td>
             <td class="cell-center">
@@ -846,7 +843,7 @@ function renderRosterTable() {
             </td>
           </tr>
         `).join("")}
-        ${filteredPlayers.length === 0 ? `<tr><td colspan="11" class="cell-center" style="padding:24px; color:var(--color-ink-muted);">배드민턴 출전 표시된 선수가 없습니다. '전체 참가인원' 탭에서 배드민턴 항목을 체크하세요.</td></tr>` : ''}
+        ${filteredPlayers.length === 0 ? `<tr><td colspan="10" class="cell-center" style="padding:24px; color:var(--color-ink-muted);">배드민턴 출전 표시된 선수가 없습니다. '전체 참가인원' 탭에서 배드민턴 항목을 체크하세요.</td></tr>` : ''}
       </tbody>
     `;
   }

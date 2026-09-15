@@ -94,51 +94,33 @@ h1, h2, h3, h4, p, span, button, a, div {
 }
 
 .global-nav {
-  min-height: 44px;
+  min-height: 42px;
   background-color: var(--color-black);
   color: var(--color-on-dark);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 8px 16px;
-  font-size: 12px;
-  letter-spacing: -0.12px;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.global-nav-brand {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
-  color: #fff;
-  text-decoration: none;
   font-size: 14px;
-  white-space: nowrap;
-  letter-spacing: -0.3px;
-}
-
-.global-nav-brand svg {
-  width: 18px;
-  height: 18px;
-  fill: var(--color-primary-dark);
-  flex-shrink: 0;
+  letter-spacing: -0.2px;
 }
 
 .global-nav-info {
   display: flex;
   align-items: center;
-  gap: 12px;
-  color: var(--color-on-dark-muted);
-  font-size: 12px;
-  white-space: nowrap;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  color: #f5f5f7;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .global-nav-info span {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
+  white-space: nowrap;
 }
 
 .sub-nav-frosted {
@@ -804,15 +786,42 @@ h1, h2, h3, h4, p, span, button, a, div {
 /* Responsive Breakdown Rules */
 @media (max-width: 640px) {
   .global-nav {
+    display: flex;
+    align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 6px 12px;
-  }
-  .global-nav-brand {
-    font-size: 13px;
+    padding: 8px 10px;
+    width: 100%;
+    box-sizing: border-box;
   }
   .global-nav-info {
-    font-size: 11px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 6px 10px;
+    font-size: 13px;
+    width: 100%;
+    max-width: 100%;
+  }
+  .global-nav-info span {
+    font-size: 13px;
+  }
+  #countdown-badge {
+    font-size: 12px;
+    padding: 2.5px 7px !important;
+  }
+  .firebase-status-badge {
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .admin-auth-badge {
+    padding: 3px 8px;
+    font-size: 11.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
   .sub-nav-frosted {
     padding: 8px 10px;
@@ -1127,28 +1136,139 @@ body:not(.is-admin) .admin-only {
 
 /* Readonly visual styling for admin-input when NOT in admin mode */
 body:not(.is-admin) .admin-input {
-  pointer-events: none !important;
+  cursor: pointer;
   opacity: 0.85;
   background-color: transparent !important;
 }
 
 body:not(.is-admin) input.cell-direct-input {
-  pointer-events: none !important;
+  cursor: pointer;
   background: transparent !important;
   border-color: transparent !important;
 }
 
 body:not(.is-admin) select.cell-direct-input,
 body:not(.is-admin) select.cell-direct-select {
-  pointer-events: none !important;
+  cursor: pointer;
   appearance: none;
   background: transparent !important;
   border-color: transparent !important;
 }
 
 body:not(.is-admin) .excel-table input[type="checkbox"] {
-  pointer-events: none !important;
+  cursor: pointer;
   opacity: 0.7;
 }
+
+/* ==========================================================================
+   Firebase Cloud Sync UI Styles
+   ========================================================================== */
+
+.firebase-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+  backdrop-filter: blur(8px);
+  flex-shrink: 0;
+}
+
+#firebase-status-text {
+  display: none;
+}
+
+.firebase-status-badge:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.firebase-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #9ca3af;
+  transition: all 0.3s ease;
+}
+
+.firebase-status-badge.status-connected {
+  border-color: rgba(52, 199, 89, 0.4);
+  background: rgba(52, 199, 89, 0.15);
+}
+
+.firebase-status-badge.status-error {
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.15);
+}
+
+@keyframes syncPulseAnim {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.7); }
+  50% { transform: scale(1.04); box-shadow: 0 0 0 6px rgba(52, 199, 89, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(52, 199, 89, 0); }
+}
+
+.pulse-sync {
+  animation: syncPulseAnim 0.8s ease-out;
+}
+
+/* Firebase Config Modal Specifics */
+.firebase-guide-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 16px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--color-ink);
+}
+
+.firebase-guide-box code {
+  background: #e2e8f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 11px;
+  color: #0f172a;
+}
+
+.firebase-status-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.firebase-status-banner.connected {
+  background: rgba(52, 199, 89, 0.1);
+  color: #15803d;
+  border: 1px solid rgba(52, 199, 89, 0.3);
+}
+
+.firebase-status-banner.disconnected {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+}
+
+.firebase-status-banner.error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #b91c1c;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
 
 

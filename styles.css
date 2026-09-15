@@ -755,6 +755,93 @@ h1, h2, h3, h4, p, span, button, a, div {
   justify-content: space-between;
 }
 
+/* Sports Regulations Dark Header Banner (High Visibility - Apple Dark Style) */
+.rules-card {
+  background-color: var(--color-canvas);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-bottom: 28px;
+}
+
+.rules-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.rules-card-banner {
+  background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 100%);
+  color: #ffffff;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.rules-card-banner.banner-soccer {
+  background: linear-gradient(135deg, #141b25 0%, #1e2837 100%);
+  border-bottom: 2px solid rgba(0, 102, 204, 0.45);
+}
+
+.rules-card-banner.banner-jokgu {
+  background: linear-gradient(135deg, #221a14 0%, #2e231a 100%);
+  border-bottom: 2px solid rgba(255, 149, 0, 0.45);
+}
+
+.rules-card-banner.banner-badminton {
+  background: linear-gradient(135deg, #132017 0%, #1a2a1f 100%);
+  border-bottom: 2px solid rgba(52, 199, 89, 0.45);
+}
+
+.rules-card-title {
+  font-size: 19px;
+  font-weight: 700;
+  color: #ffffff !important;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rules-card-subtitle {
+  font-size: 12.5px;
+  color: #a1a1a6;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rules-card-badge {
+  color: #ffffff !important;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
+  letter-spacing: -0.2px;
+}
+
+.rules-card-badge.badge-soccer {
+  background: #0066cc;
+}
+
+.rules-card-badge.badge-jokgu {
+  background: #ff9500;
+}
+
+.rules-card-badge.badge-badminton {
+  background: #34c759;
+}
+
+.rules-card-body {
+  padding: 20px;
+}
+
 /* Footer */
 .apple-footer {
   background: var(--color-parchment);
@@ -858,6 +945,23 @@ h1, h2, h3, h4, p, span, button, a, div {
   }
   .tile-section {
     padding: 36px 12px;
+  }
+  .rules-card-banner {
+    padding: 14px 16px;
+    gap: 10px;
+  }
+  .rules-card-title {
+    font-size: 17px;
+  }
+  .rules-card-subtitle {
+    font-size: 11.5px;
+  }
+  .rules-card-badge {
+    font-size: 11px;
+    padding: 3.5px 10px;
+  }
+  .rules-card-body {
+    padding: 16px 12px;
   }
   .search-pill-input {
     width: 100%;

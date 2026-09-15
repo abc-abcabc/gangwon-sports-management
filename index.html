@@ -24,7 +24,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=5">
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- SheetJS for Excel Import/Export -->
@@ -43,10 +43,10 @@
         <span><i data-lucide="calendar" style="width:15px;height:15px;"></i> 10.24.(토) ~ 10.25.(일)</span>
         <span><i data-lucide="map-pin" style="width:15px;height:15px;"></i> 삼척시</span>
         <span id="countdown-badge" style="background:#0066cc; color:#fff; padding:2px 8px; border-radius:9999px; font-weight:600;">D-Day</span>
-        <button id="firebase-status-badge" class="firebase-status-badge status-disconnected" onclick="openFirebaseModal()" title="실시간 클라우드 연동 상태" type="button">
+        <div id="firebase-status-badge" class="firebase-status-badge status-disconnected" title="실시간 동기화 상태">
           <span id="firebase-status-dot" class="firebase-status-dot"></span>
           <span id="firebase-status-text" style="display:none;">로컬 모드</span>
-        </button>
+        </div>
         <button id="admin-auth-btn" class="admin-auth-badge" title="수정 모드 (관리자 로그인)" type="button" style="cursor:pointer; z-index:101; position:relative;">
           <span id="admin-btn-text" style="pointer-events:none;">🔒 수정</span>
         </button>

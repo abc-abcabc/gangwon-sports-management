@@ -683,6 +683,48 @@ h1, h2, h3, h4, p, span, button, a, div {
   font-weight: 700;
 }
 
+/* In-Place Team Name Input box inside match card */
+.team-direct-input {
+  flex: 1;
+  min-width: 0;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--color-ink);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 4px 6px;
+  margin: 0;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.team-direct-input:hover {
+  background: rgba(0, 102, 204, 0.05);
+  border-color: rgba(0, 102, 204, 0.25);
+}
+
+.team-direct-input:focus {
+  background: #ffffff;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+}
+
+.team-direct-input.is-placeholder {
+  color: #0066cc;
+  font-weight: 600;
+  background: rgba(0, 102, 204, 0.05);
+  border: 1px dashed rgba(0, 102, 204, 0.4);
+  cursor: pointer;
+}
+
+.team-direct-input.is-placeholder:hover {
+  background: rgba(0, 102, 204, 0.1);
+  border-color: var(--color-primary);
+}
+
 /* In-Place Score Input box inside match card */
 .score-direct-input {
   width: 44px;

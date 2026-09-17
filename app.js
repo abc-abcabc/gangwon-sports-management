@@ -1278,7 +1278,7 @@ function renderBracketsPage() {
     <div class="bracket-group-card">
       <div class="bracket-group-header">
         <h3 class="display-md" style="font-size:18px; margin:0;">${sportTitle} - A조 대진표</h3>
-        <span style="font-size:12px; color:var(--color-primary); font-weight:600;">스코어 직접 입력 가능</span>
+        <span style="font-size:12px; color:var(--color-primary); font-weight:600;">✏️ 진출팀 및 스코어 직접 수정 가능</span>
       </div>
       <div class="match-grid">
         ${data.groupA.map(m => renderMatchCardHtml(m)).join("")}
@@ -1291,7 +1291,7 @@ function renderBracketsPage() {
     <div class="bracket-group-card">
       <div class="bracket-group-header">
         <h3 class="display-md" style="font-size:18px; margin:0;">${sportTitle} - B조 대진표</h3>
-        <span style="font-size:12px; color:var(--color-primary); font-weight:600;">스코어 직접 입력 가능</span>
+        <span style="font-size:12px; color:var(--color-primary); font-weight:600;">✏️ 진출팀 및 스코어 직접 수정 가능</span>
       </div>
       <div class="match-grid">
         ${data.groupB.map(m => renderMatchCardHtml(m)).join("")}
@@ -1306,27 +1306,84 @@ function renderBracketsPage() {
 function renderMatchCardHtml(m) {
   const isFinished = m.status === "종료" || m.status === "우승";
   const hasScores = m.score1 !== null && m.score2 !== null;
+  const isPlaceholder1 = (m.team1 || '').includes("그룹") || (m.team1 || '').includes("위") || (m.team1 || '').includes("승자") || (m.team1 || '').includes("진출");
+  const isPlaceholder2 = (m.team2 || '').includes("그룹") || (m.team2 || '').includes("위") || (m.team2 || '').includes("승자") || (m.team2 || '').includes("진출");
 
   return `
     <div class="match-card">
       <div class="match-header">
-        <span>${m.match}</span>
+        <span>${escapeHtml(m.match)}</span>
         <span style="font-weight:600; color:${isFinished ? 'var(--color-success)' : 'var(--color-ink-light)'};">
-          ${isFinished ? (m.winner ? `승: ${m.winner}` : '경기 종료') : '경기 예정'}
+          ${isFinished ? (m.winner ? `승: ${escapeHtml(m.winner)}` : '경기 종료') : '경기 예정'}
         </span>
       </div>
 
       <div class="match-team-row ${hasScores && m.winner === m.team1 ? 'winner' : ''}">
-        <span style="font-weight:500;">${escapeHtml(m.team1)}</span>
-        <input type="number" class="score-direct-input" value="${m.score1 !== null ? m.score1 : ''}" placeholder="-" min="0" max="99" onchange="updateMatchScoreDirect('${m.id}', 1, this.value)">
+        <input type="text" 
+          class="team-direct-input ${isPlaceholder1 ? 'is-placeholder' : ''}" 
+          value="${escapeHtml(m.team1 || '')}" 
+          placeholder="팀명 입력" 
+          title="클릭하여 진출팀/팀명 직접 수정" 
+          onkeydown="if(event.key==='Enter') this.blur();"
+          onchange="updateMatchTeamDirect('${m.id}', 1, this.value)">
+        <input type="number" 
+          class="score-direct-input" 
+          value="${m.score1 !== null ? m.score1 : ''}" 
+          placeholder="-" 
+          min="0" 
+          max="99" 
+          title="점수 입력"
+          onchange="updateMatchScoreDirect('${m.id}', 1, this.value)">
       </div>
 
       <div class="match-team-row ${hasScores && m.winner === m.team2 ? 'winner' : ''}">
-        <span style="font-weight:500;">${escapeHtml(m.team2)}</span>
-        <input type="number" class="score-direct-input" value="${m.score2 !== null ? m.score2 : ''}" placeholder="-" min="0" max="99" onchange="updateMatchScoreDirect('${m.id}', 2, this.value)">
+        <input type="text" 
+          class="team-direct-input ${isPlaceholder2 ? 'is-placeholder' : ''}" 
+          value="${escapeHtml(m.team2 || '')}" 
+          placeholder="팀명 입력" 
+          title="클릭하여 진출팀/팀명 직접 수정" 
+          onkeydown="if(event.key==='Enter') this.blur();"
+          onchange="updateMatchTeamDirect('${m.id}', 2, this.value)">
+        <input type="number" 
+          class="score-direct-input" 
+          value="${m.score2 !== null ? m.score2 : ''}" 
+          placeholder="-" 
+          min="0" 
+          max="99" 
+          title="점수 입력"
+          onchange="updateMatchScoreDirect('${m.id}', 2, this.value)">
       </div>
     </div>
   `;
+}
+
+function updateMatchTeamDirect(matchId, teamIndex, value) {
+  const sportData = bracketsDataStore[currentBracketSport];
+  if (!sportData) return;
+
+  let match = (sportData.groupA || []).find(m => m.id === matchId) || (sportData.groupB || []).find(m => m.id === matchId);
+  if (!match) return;
+
+  const trimmedVal = (value || "").trim();
+  const oldTeam = teamIndex === 1 ? match.team1 : match.team2;
+
+  if (teamIndex === 1) {
+    match.team1 = trimmedVal;
+  } else if (teamIndex === 2) {
+    match.team2 = trimmedVal;
+  }
+
+  // 승자 표기가 기존 팀명이었거나 점수가 이미 입력된 경우 갱신
+  if (match.winner && match.winner === oldTeam) {
+    match.winner = trimmedVal;
+  } else if (match.score1 !== null && match.score2 !== null) {
+    if (match.score1 > match.score2) match.winner = match.team1;
+    else if (match.score2 > match.score1) match.winner = match.team2;
+    else match.winner = "무승부";
+  }
+
+  saveBracketsStore();
+  renderBracketsPage();
 }
 
 function updateMatchScoreDirect(matchId, teamIndex, value) {

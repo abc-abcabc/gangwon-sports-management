@@ -182,6 +182,29 @@ const INITIAL_LODGING_PLACES = [
   }
 ];
 
+// Data Normalization Helper (Ensures boolean checkboxes and soccer fields stay in sync)
+function normalizePlayerData(store) {
+  if (!store || !Array.isArray(store.gangneung)) return;
+  store.gangneung.forEach(p => {
+    p.stay = Boolean(p.stay);
+    p.dinner = Boolean(p.dinner);
+    p.jokgu = Boolean(p.jokgu);
+    p.badminton = Boolean(p.badminton);
+    if (p.soccer === false) {
+      p.soccerM = false;
+      p.soccerW = false;
+    } else if (p.soccer === true) {
+      p.soccerM = true;
+    } else if (p.soccerM) {
+      p.soccer = true;
+    } else {
+      p.soccer = false;
+      p.soccerM = false;
+      p.soccerW = false;
+    }
+  });
+}
+
 // Load State from LocalStorage (with backward-compatible recovery across versions)
 function initStore() {
   const currentKey = "GANGWON_PE_STORE_GANGNEUNG_V8";
@@ -203,6 +226,7 @@ function initStore() {
     // 최초 방문: 기본 37명 명단으로 초기화
     playerDataStore = JSON.parse(JSON.stringify(INITIAL_PLAYERS));
   }
+  normalizePlayerData(playerDataStore);
   saveStore(false);
 
   const savedBrackets = localStorage.getItem("GANGWON_BRACKETS_STORE_V8");
@@ -477,6 +501,10 @@ function movePlayerStep(playerId, direction, event) {
 
 function setupRowDragEvents(tr) {
   tr.addEventListener('dragstart', (e) => {
+    if (e.target.closest('input') || e.target.closest('select') || e.target.closest('button')) {
+      e.preventDefault();
+      return;
+    }
     draggedRowId = tr.dataset.id;
     tr.classList.add('dragging');
     e.dataTransfer.effectAllowed = 'move';
@@ -699,11 +727,11 @@ function renderRosterTable() {
               </select>
             </td>
             ${renderNameCellHtml(p, duplicateCounts, 'var(--color-ink)')}
-            <td class="cell-center"><input type="checkbox" ${p.stay ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'stay')"></td>
-            <td class="cell-center"><input type="checkbox" ${p.dinner ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'dinner')"></td>
-            <td class="cell-center"><input type="checkbox" ${p.soccer || p.soccerM ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'soccer')"></td>
-            <td class="cell-center"><input type="checkbox" ${p.jokgu ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'jokgu')"></td>
-            <td class="cell-center"><input type="checkbox" ${p.badminton ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'badminton')"></td>
+            <td class="cell-center"><input type="checkbox" ${Boolean(p.stay) ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'stay', this.checked)"></td>
+            <td class="cell-center"><input type="checkbox" ${Boolean(p.dinner) ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'dinner', this.checked)"></td>
+            <td class="cell-center"><input type="checkbox" ${Boolean(p.soccer || p.soccerM) ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'soccer', this.checked)"></td>
+            <td class="cell-center"><input type="checkbox" ${Boolean(p.jokgu) ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'jokgu', this.checked)"></td>
+            <td class="cell-center"><input type="checkbox" ${Boolean(p.badminton) ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'badminton', this.checked)"></td>
             <td>
               <input type="text" class="cell-direct-input" style="font-size:12px; color:var(--color-ink-muted);" value="${escapeHtml(p.note || '')}" placeholder="비고 입력" oninput="updatePlayerDirect('${p.id}', 'note', this.value)">
             </td>
@@ -747,8 +775,8 @@ function renderRosterTable() {
             <td class="cell-center">
               ${p.soccerW ? '<span style="background:rgba(175,82,222,0.1); color:#af52de; padding:2px 8px; border-radius:9999px; font-weight:600; font-size:11px;">축구(여)</span>' : '<span style="background:rgba(0,102,204,0.1); color:var(--color-primary); padding:2px 8px; border-radius:9999px; font-weight:600; font-size:11px;">축구 선수</span>'}
             </td>
-            <td class="cell-center"><input type="checkbox" ${p.stay ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'stay')"></td>
-            <td class="cell-center"><input type="checkbox" ${p.dinner ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'dinner')"></td>
+            <td class="cell-center"><input type="checkbox" ${Boolean(p.stay) ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'stay', this.checked)"></td>
+            <td class="cell-center"><input type="checkbox" ${Boolean(p.dinner) ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'dinner', this.checked)"></td>
             <td><input type="text" class="cell-direct-input" style="font-size:12px; color:var(--color-ink-muted);" value="${escapeHtml(p.note || '')}" placeholder="비고" oninput="updatePlayerDirect('${p.id}', 'note', this.value)"></td>
             <td class="cell-center">
               <button class="admin-only" onclick="deletePlayer('${p.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px;" title="삭제">&times;</button>
@@ -794,8 +822,8 @@ function renderRosterTable() {
                   ? '<span style="background:rgba(0,102,204,0.1); color:var(--color-primary); font-weight:600; padding:2px 8px; border-radius:9999px; font-size:11px;">스포츠강사</span>'
                   : '<span style="color:var(--color-ink-muted); font-size:11px;">일반 교사</span>'}
             </td>
-            <td class="cell-center"><input type="checkbox" ${p.stay ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'stay')"></td>
-            <td class="cell-center"><input type="checkbox" ${p.dinner ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'dinner')"></td>
+            <td class="cell-center"><input type="checkbox" ${Boolean(p.stay) ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'stay', this.checked)"></td>
+            <td class="cell-center"><input type="checkbox" ${Boolean(p.dinner) ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'dinner', this.checked)"></td>
             <td><input type="text" class="cell-direct-input" style="font-size:12px; color:var(--color-ink-muted);" value="${escapeHtml(p.note || '')}" placeholder="비고" oninput="updatePlayerDirect('${p.id}', 'note', this.value)"></td>
             <td class="cell-center">
               <button class="admin-only" onclick="deletePlayer('${p.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px;" title="삭제">&times;</button>
@@ -836,7 +864,7 @@ function renderRosterTable() {
             </td>
             ${renderNameCellHtml(p, duplicateCounts, '#34c759')}
             <td class="cell-center">${p.gender || '남'}</td>
-            <td class="cell-center"><input type="checkbox" ${p.stay ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'stay')"></td>
+            <td class="cell-center"><input type="checkbox" ${Boolean(p.stay) ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'stay', this.checked)"></td>
             <td><input type="text" class="cell-direct-input" style="font-size:12px; color:var(--color-ink-muted);" value="${escapeHtml(p.note || '')}" placeholder="비고" oninput="updatePlayerDirect('${p.id}', 'note', this.value)"></td>
             <td class="cell-center">
               <button class="admin-only" onclick="deletePlayer('${p.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:18px;" title="삭제">&times;</button>
@@ -920,13 +948,26 @@ function filterRosterTable() {
   renderRosterTable();
 }
 
-function togglePlayerField(playerId, field) {
-  if (!ensureAdminAuthorized()) return;
+function togglePlayerField(playerId, field, isChecked) {
+  if (!ensureAdminAuthorized()) {
+    renderRosterTable();
+    return;
+  }
   const players = playerDataStore.gangneung || [];
   const player = players.find(p => p.id === playerId);
   if (player) {
-    player[field] = !player[field];
+    const val = typeof isChecked === "boolean" ? isChecked : !Boolean(player[field]);
+    if (field === "soccer") {
+      player.soccer = val;
+      player.soccerM = val;
+      if (!val) {
+        player.soccerW = false;
+      }
+    } else {
+      player[field] = val;
+    }
     saveStore();
+    if (typeof updateRosterStats === "function") updateRosterStats();
     renderRosterTable();
   }
 }

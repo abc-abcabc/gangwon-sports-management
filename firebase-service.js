@@ -154,6 +154,9 @@ function startFirestoreListeners() {
         if (remoteData && remoteData.payload) {
           if (typeof playerDataStore !== "undefined") {
             playerDataStore = remoteData.payload;
+            if (typeof normalizePlayerData === "function") {
+              normalizePlayerData(playerDataStore);
+            }
             try {
               localStorage.setItem("GANGWON_PE_STORE_GANGNEUNG_V8", JSON.stringify(playerDataStore));
             } catch (e) {}

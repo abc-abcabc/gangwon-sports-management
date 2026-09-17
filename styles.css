@@ -1216,29 +1216,55 @@ h1, h2, h3, h4, p, span, button, a, div {
   height: 26px;
   min-width: 26px;
   padding: 0;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 50%;
   font-size: 13px;
   line-height: 1;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   outline: none;
   flex-shrink: 0;
   box-sizing: border-box;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .admin-auth-badge:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.4);
   transform: scale(1.08);
 }
 
 body.is-admin .admin-auth-badge {
-  background: #34c759;
+  background: radial-gradient(circle at 35% 35%, rgba(52, 199, 89, 0.38) 0%, rgba(16, 68, 38, 0.55) 100%);
   color: #ffffff;
-  border-color: #34c759;
-  box-shadow: 0 2px 8px rgba(52, 199, 89, 0.4);
+  border: 1px solid rgba(74, 222, 128, 0.75);
+  box-shadow: 0 0 10px rgba(52, 199, 89, 0.55), 0 0 20px rgba(52, 199, 89, 0.25), inset 0 0 8px rgba(74, 222, 128, 0.35);
+  animation: adminGlowPulse 2.4s ease-in-out infinite;
+}
+
+body.is-admin .admin-auth-badge:hover {
+  background: radial-gradient(circle at 35% 35%, rgba(52, 199, 89, 0.5) 0%, rgba(16, 68, 38, 0.7) 100%);
+  border-color: rgba(74, 255, 130, 0.95);
+  box-shadow: 0 0 16px rgba(52, 199, 89, 0.85), 0 0 28px rgba(52, 199, 89, 0.45), inset 0 0 10px rgba(74, 222, 128, 0.5);
+  transform: scale(1.1);
+}
+
+body.is-admin .admin-auth-badge #admin-btn-text {
+  filter: drop-shadow(0 0 4px rgba(74, 222, 128, 0.85));
+}
+
+@keyframes adminGlowPulse {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(52, 199, 89, 0.45), 0 0 16px rgba(52, 199, 89, 0.2), inset 0 0 6px rgba(74, 222, 128, 0.3);
+    border-color: rgba(74, 222, 128, 0.65);
+  }
+  50% {
+    box-shadow: 0 0 14px rgba(52, 199, 89, 0.85), 0 0 26px rgba(52, 199, 89, 0.45), inset 0 0 10px rgba(74, 222, 128, 0.55);
+    border-color: rgba(74, 255, 130, 0.95);
+  }
 }
 
 /* Hide admin-only controls when NOT in admin mode */

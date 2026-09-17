@@ -1778,8 +1778,8 @@ function updateAdminUI() {
   }
   if (btnAuth) {
     btnAuth.title = isAdminMode ? "수정 모드 활성화됨 (클릭 시 일반 모드로 전환)" : "수정 모드 (관리자 로그인)";
-    btnAuth.style.background = isAdminMode ? "#34c759" : "";
-    btnAuth.style.borderColor = isAdminMode ? "#34c759" : "";
+    btnAuth.style.background = "";
+    btnAuth.style.borderColor = "";
   }
 
   try {

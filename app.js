@@ -1767,7 +1767,7 @@ function updateAdminUI() {
   const btnAuth = document.getElementById("admin-auth-btn");
 
   if (btnText) {
-    btnText.textContent = isAdminMode ? "🔓 수정 중" : "🔒 수정";
+    btnText.textContent = isAdminMode ? "🔓" : "🔒";
   }
   if (btnAuth) {
     btnAuth.title = isAdminMode ? "수정 모드 활성화됨 (클릭 시 일반 모드로 전환)" : "수정 모드 (관리자 로그인)";

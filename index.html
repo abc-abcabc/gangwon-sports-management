@@ -24,7 +24,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=6">
+  <link rel="stylesheet" href="styles.css?v=7">
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- SheetJS for Excel Import/Export -->
@@ -47,8 +47,8 @@
           <span id="firebase-status-dot" class="firebase-status-dot"></span>
           <span id="firebase-status-text" style="display:none;">로컬 모드</span>
         </div>
-        <button id="admin-auth-btn" class="admin-auth-badge" title="수정 모드 (관리자 로그인)" type="button" style="cursor:pointer; z-index:101; position:relative;">
-          <span id="admin-btn-text" style="pointer-events:none;">🔒 수정</span>
+        <button id="admin-auth-btn" class="admin-auth-badge" title="수정 모드 (관리자 로그인)" aria-label="수정 모드" type="button" style="cursor:pointer; z-index:101; position:relative;">
+          <span id="admin-btn-text" style="pointer-events:none;">🔒</span>
         </button>
       </div>
     </header>
@@ -1152,7 +1152,7 @@
 
   <script src="firebase-config.js?v=3"></script>
   <script src="firebase-service.js?v=3"></script>
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
   <script>
     // Lucide icons
     try { lucide.createIcons(); } catch(e) {}
@@ -1174,6 +1174,8 @@
             isAdminMode = false;
             try { sessionStorage.removeItem('GANGWON_IS_ADMIN'); } catch(ex){}
             try { updateAdminUI(); } catch(ex){}
+            var t = document.getElementById('admin-btn-text');
+            if (t) t.textContent = '🔒';
             window.alert('👁️ 일반 열람 모드로 전환되었습니다.');
           }
           return;
@@ -1192,7 +1194,7 @@
             // updateAdminUI가 없을 경우 수동 처리
             document.body.classList.add('is-admin');
             var t = document.getElementById('admin-btn-text');
-            if (t) t.textContent = '🔓 수정 중';
+            if (t) t.textContent = '🔓';
           }
           window.alert('🔓 관리자 인증 성공!\n수정 권한이 활성화되었습니다.');
         } else {

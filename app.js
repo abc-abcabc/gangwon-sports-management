@@ -151,48 +151,15 @@ let lodgingPlacesDataStore = [];
 
 const INITIAL_DINING_PLACES = [
   {
-    id: "d1",
+    id: "dining_samil",
     date: "10.24",
     dateLabel: "10월 24일(토)",
     mealType: "석식 만찬",
-    name: "강원대 삼척캠퍼스 대운동장 연회장",
-    address: "강원 삼척시 중앙로 346 강원대학교 삼척캠퍼스",
-    phone: "033-570-7114",
-    note: "개회식 및 족구 경기 종료 후 공식 석식 만찬 장소입니다.",
-    category: "공식만찬"
-  },
-  {
-    id: "d2",
-    date: "10.24",
-    dateLabel: "10월 24일(토)",
-    mealType: "석식 모임",
-    name: "삼척 항구 회센터 / 쏠비치 인근 구역",
-    address: "강원 삼척시 수로부인길 453",
-    phone: "033-570-0000",
-    note: "지회별 자체 단체 회식 및 교류 모임 구역입니다.",
-    category: "자체모임"
-  },
-  {
-    id: "d3",
-    date: "10.25",
-    dateLabel: "10월 25일(일)",
-    mealType: "중식",
-    name: "삼척복합체육공원 구내식당 / 정식당",
-    address: "강원 삼척시 교동 산28-1",
-    phone: "033-570-3900",
-    note: "축구 참가 선수단 및 임원 중식 식사 제공 장소 (12:30~13:30)",
-    category: "선수단중식"
-  },
-  {
-    id: "d4",
-    date: "10.25",
-    dateLabel: "10월 25일(일)",
-    mealType: "중식",
-    name: "진주초등학교 체육관 휴게실",
-    address: "강원 삼척시 진주로 45",
-    phone: "033-573-2283",
-    note: "배드민턴 참가 선수단 도시락 제공 및 휴식 구역 (12:30~13:30)",
-    category: "선수단중식"
+    name: "삼일회관",
+    address: "강원특별자치도 삼척시 중앙시장길 26",
+    phone: "033-574-5631",
+    category: "공식 만찬",
+    note: "10.24(토) 강릉지회 선수단 및 임원 공식 석식 만찬 장소"
   }
 ];
 

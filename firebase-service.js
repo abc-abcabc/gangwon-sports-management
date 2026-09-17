@@ -417,41 +417,8 @@ async function uploadAllLocalDataToCloud() {
 async function autoSeedInitialDataIfEmpty() {
   if (hasAutoSeeded || !firestoreDb || !isFirebaseConnected) return;
   hasAutoSeeded = true;
-
-  try {
-    const col = firestoreDb.collection(FS_COLLECTION);
-    const now = firebase.firestore.FieldValue.serverTimestamp();
-    const batch = firestoreDb.batch();
-
-    batch.set(col.doc(FS_DOCS.PLAYERS), {
-      payload: (typeof playerDataStore !== "undefined" && playerDataStore && playerDataStore.gangneung) ? playerDataStore : INITIAL_PLAYERS,
-      updatedAt: now,
-      note: "Auto-Seeded Initial Roster"
-    });
-
-    batch.set(col.doc(FS_DOCS.BRACKETS), {
-      payload: (typeof bracketsDataStore !== "undefined" && bracketsDataStore && bracketsDataStore.jokgu) ? bracketsDataStore : INITIAL_BRACKETS_DATA,
-      updatedAt: now,
-      note: "Auto-Seeded Initial Brackets"
-    });
-
-    batch.set(col.doc(FS_DOCS.DINING), {
-      payload: (typeof diningPlacesDataStore !== "undefined" && diningPlacesDataStore && diningPlacesDataStore.length) ? diningPlacesDataStore : INITIAL_DINING_PLACES,
-      updatedAt: now,
-      note: "Auto-Seeded Initial Dining"
-    });
-
-    batch.set(col.doc(FS_DOCS.LODGING), {
-      payload: (typeof lodgingPlacesDataStore !== "undefined" && lodgingPlacesDataStore && lodgingPlacesDataStore.length) ? lodgingPlacesDataStore : INITIAL_LODGING_PLACES,
-      updatedAt: now,
-      note: "Auto-Seeded Initial Lodging"
-    });
-
-    await batch.commit();
-    console.log("[Firebase] 원격 Firestore에 기본 선수단 및 대진표 데이터가 성공적으로 자동 등록되었습니다.");
-  } catch (e) {
-    console.warn("[Firebase] 자동 시딩 실패 (보안 규칙 확인 필요):", e.message);
-  }
+  // Firestore에 등록된 사용자 데이터 보호 (불필요한 초기값 덮어쓰기 방지)
+  console.log("[Firebase] 클라우드 데이터 보호 활성화 - 자동 시딩 덮어쓰기 방지됨");
 }
 
 let lastPermissionAlertTime = 0;

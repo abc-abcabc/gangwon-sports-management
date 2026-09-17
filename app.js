@@ -705,7 +705,7 @@ function renderRosterTable() {
   const tableEl = document.getElementById("roster-table");
   if (!tableEl) return;
 
-  const positionOptions = ["교사", "교장", "교감", "교육장", "교육과장", "장학사", "전문직", "고문님"];
+  const positionOptions = ["교사", "교장", "교감", "교육장", "교육과장", "장학사", "전문직", "고문님", "스포츠강사"];
 
   if (currentCategoryFilter === "all" || currentCategoryFilter === "duplicate") {
     tableEl.innerHTML = `
@@ -735,8 +735,8 @@ function renderRosterTable() {
             </td>
             <td>
               <select class="cell-direct-select" onchange="updatePlayerDirect('${p.id}', 'position', this.value)">
-                ${positionOptions.map(pos => `<option value="${pos}" ${p.position === pos ? 'selected' : ''}>${pos}</option>`).join("")}
-                ${!positionOptions.includes(p.position) ? `<option value="${escapeHtml(p.position)}" selected>${escapeHtml(p.position)}</option>` : ''}
+                ${positionOptions.map(pos => `<option value="${pos}" ${(p.position === pos || (pos === '스포츠강사' && p.position === '스포츠 강사')) ? 'selected' : ''}>${pos}</option>`).join("")}
+                ${!positionOptions.includes(p.position) && p.position && p.position !== '스포츠 강사' ? `<option value="${escapeHtml(p.position)}" selected>${escapeHtml(p.position)}</option>` : ''}
               </select>
             </td>
             ${renderNameCellHtml(p, duplicateCounts, 'var(--color-ink)')}
@@ -780,7 +780,8 @@ function renderRosterTable() {
             <td><input type="text" class="cell-direct-input" value="${escapeHtml(p.school)}" oninput="updatePlayerDirect('${p.id}', 'school', this.value)"></td>
             <td>
               <select class="cell-direct-select" onchange="updatePlayerDirect('${p.id}', 'position', this.value)">
-                ${positionOptions.map(pos => `<option value="${pos}" ${p.position === pos ? 'selected' : ''}>${pos}</option>`).join("")}
+                ${positionOptions.map(pos => `<option value="${pos}" ${(p.position === pos || (pos === '스포츠강사' && p.position === '스포츠 강사')) ? 'selected' : ''}>${pos}</option>`).join("")}
+                ${!positionOptions.includes(p.position) && p.position && p.position !== '스포츠 강사' ? `<option value="${escapeHtml(p.position)}" selected>${escapeHtml(p.position)}</option>` : ''}
               </select>
             </td>
             ${renderNameCellHtml(p, duplicateCounts, 'var(--color-primary)')}
@@ -822,12 +823,17 @@ function renderRosterTable() {
             <td><input type="text" class="cell-direct-input" value="${escapeHtml(p.school)}" oninput="updatePlayerDirect('${p.id}', 'school', this.value)"></td>
             <td>
               <select class="cell-direct-select" onchange="updatePlayerDirect('${p.id}', 'position', this.value)">
-                ${positionOptions.map(pos => `<option value="${pos}" ${p.position === pos ? 'selected' : ''}>${pos}</option>`).join("")}
+                ${positionOptions.map(pos => `<option value="${pos}" ${(p.position === pos || (pos === '스포츠강사' && p.position === '스포츠 강사')) ? 'selected' : ''}>${pos}</option>`).join("")}
+                ${!positionOptions.includes(p.position) && p.position && p.position !== '스포츠 강사' ? `<option value="${escapeHtml(p.position)}" selected>${escapeHtml(p.position)}</option>` : ''}
               </select>
             </td>
             ${renderNameCellHtml(p, duplicateCounts, '#ff9500')}
             <td class="cell-center">
-              ${["교장", "교감", "전문직", "교육장", "교육과장", "장학사", "고문", "고문님"].includes(p.position) ? '<span style="background:rgba(255,149,0,0.1); color:#ff9500; font-weight:700; padding:2px 8px; border-radius:9999px; font-size:11px;">고문님/관리자 규정 충족</span>' : '<span style="color:var(--color-ink-muted); font-size:11px;">일반 교사</span>'}
+              ${["교장", "교감", "전문직", "교육장", "교육과장", "장학사", "고문", "고문님"].includes(p.position)
+                ? '<span style="background:rgba(255,149,0,0.1); color:#ff9500; font-weight:700; padding:2px 8px; border-radius:9999px; font-size:11px;">고문님/관리자 규정 충족</span>'
+                : (p.position === '스포츠강사' || p.position === '스포츠 강사')
+                  ? '<span style="background:rgba(0,102,204,0.1); color:var(--color-primary); font-weight:600; padding:2px 8px; border-radius:9999px; font-size:11px;">스포츠강사</span>'
+                  : '<span style="color:var(--color-ink-muted); font-size:11px;">일반 교사</span>'}
             </td>
             <td class="cell-center"><input type="checkbox" ${p.stay ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'stay')"></td>
             <td class="cell-center"><input type="checkbox" ${p.dinner ? 'checked' : ''} onchange="togglePlayerField('${p.id}', 'dinner')"></td>
@@ -865,7 +871,8 @@ function renderRosterTable() {
             <td><input type="text" class="cell-direct-input" value="${escapeHtml(p.school)}" oninput="updatePlayerDirect('${p.id}', 'school', this.value)"></td>
             <td>
               <select class="cell-direct-select" onchange="updatePlayerDirect('${p.id}', 'position', this.value)">
-                ${positionOptions.map(pos => `<option value="${pos}" ${p.position === pos ? 'selected' : ''}>${pos}</option>`).join("")}
+                ${positionOptions.map(pos => `<option value="${pos}" ${(p.position === pos || (pos === '스포츠강사' && p.position === '스포츠 강사')) ? 'selected' : ''}>${pos}</option>`).join("")}
+                ${!positionOptions.includes(p.position) && p.position && p.position !== '스포츠 강사' ? `<option value="${escapeHtml(p.position)}" selected>${escapeHtml(p.position)}</option>` : ''}
               </select>
             </td>
             ${renderNameCellHtml(p, duplicateCounts, '#34c759')}
@@ -991,7 +998,7 @@ function editPlayer(playerId) {
 
   document.getElementById("form-player-id").value = p.id;
   document.getElementById("form-school").value = p.school || "";
-  document.getElementById("form-position").value = p.position || "교사";
+  document.getElementById("form-position").value = (p.position === '스포츠 강사' ? '스포츠강사' : (p.position || "교사"));
   document.getElementById("form-name").value = p.name || "";
   document.getElementById("form-jokgu").checked = !!p.jokgu;
   if (document.getElementById("form-soccer")) document.getElementById("form-soccer").checked = !!(p.soccer || p.soccerM);

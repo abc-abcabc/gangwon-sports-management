@@ -64,14 +64,14 @@ const INITIAL_PLAYERS = {
 const INITIAL_BRACKETS_DATA = {
   jokgu: {
     groupA: [
-      { id: "m1", match: "1코트 1경기 (13:30)", team1: "속초양양", team2: "홍천", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "m2", match: "1코트 2경기", team1: "속초양양", team2: "태백", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "m3", match: "1코트 3경기", team1: "홍천", team2: "양구", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "m4", match: "1코트 4경기", team1: "속초양양", team2: "양구", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "m5", match: "3코트 1경기 (13:30)", team1: "삼척", team2: "화천", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "m6", match: "3코트 2경기", team1: "삼척", team2: "동해", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "m7", match: "3코트 3경기", team1: "동해", team2: "평창", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "m8", match: "3코트 4경기", team1: "삼척", team2: "평창", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "m1", match: "1코트 1경기 (13:30)", team1: "홍천", team2: "태백", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "m2", match: "1코트 2경기", team1: "태백", team2: "동해", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "m3", match: "1코트 3경기", team1: "홍천", team2: "동해", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "m4", match: "2코트 1경기 (13:30)", team1: "삼척", team2: "양구", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "m5", match: "2코트 2경기", team1: "양구", team2: "속초양양", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "m6", match: "2코트 3경기", team1: "삼척", team2: "속초양양", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "m7", match: "3코트 1경기 (13:30)", team1: "화천", team2: "평창", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "m8", match: "3코트 4경기", team1: "화천", team2: "평창", score1: null, score2: null, winner: "", status: "예정" },
       { id: "m9", match: "4강 1경기", team1: "그룹① 1위", team2: "그룹② 2위", score1: null, score2: null, winner: "", status: "예정" },
       { id: "m10", match: "4강 2경기", team1: "그룹① 2위", team2: "그룹② 1위", score1: null, score2: null, winner: "", status: "예정" },
       { id: "m11", match: "결승전 (2코트)", team1: "1코트 승자", team2: "3코트 승자", score1: null, score2: null, winner: "", status: "예정" }
@@ -100,39 +100,55 @@ const INITIAL_BRACKETS_DATA = {
       { id: "s2", match: "강원대 2경기 (09:45)", team1: "횡성", team2: "원주", score1: null, score2: null, winner: "", status: "예정" },
       { id: "s3", match: "강원대 3경기 (10:30)", team1: "속초양양", team2: "횡성", score1: null, score2: null, winner: "", status: "예정" },
       { id: "s4", match: "강원대 4경기 (11:15)", team1: "영월", team2: "원주", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "s5", match: "삼척복합C 1경기 (08:40)", team1: "평창", team2: "화천", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "s6", match: "삼척복합C 2경기 (09:25)", team1: "홍천", team2: "태백", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "s7", match: "삼척복합C 3경기 (10:10)", team1: "평창", team2: "동해", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "s8", match: "삼척복합C 4경기 (10:55)", team1: "화천", team2: "태백", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "s9", match: "삼척복합C 5경기 (11:40)", team1: "동해", team2: "홍천", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "s10", match: "4강전 (13:30)", team1: "강원대 승자", team2: "삼척복합C 승자", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "s11", match: "결승전 (15:00 - 강원대)", team1: "A조 결승 진출팀1", team2: "A조 결승 진출팀2", score1: null, score2: null, winner: "", status: "예정" }
+      { id: "s5", match: "삼척복합C 1경기 (09:00)", team1: "태백", team2: "홍천", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "s6", match: "삼척복합C 2경기 (10:10)", team1: "태백", team2: "동해", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "s7", match: "삼척복합C 3경기 (11:20)", team1: "홍천", team2: "동해", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "s8", match: "4강 5경기 (13:30 - 강원대)", team1: "강원대 1위", team2: "4강 진출팀", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "s9", match: "4강 6경기 (13:30 - 삼척복합C)", team1: "삼척복합C 1위", team2: "4강 진출팀", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "s10", match: "A조 결승전 (15:00 - 삼척복합C)", team1: "5경기 승자", team2: "6경기 승자", score1: null, score2: null, winner: "", status: "예정" }
     ],
     groupB: [
       { id: "sb1", match: "삼척복합A 1경기 (09:00)", team1: "정선", team2: "강릉", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "sb2", match: "삼척복합A 2경기 (09:45)", team1: "고성", team2: "양구", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "sb2", match: "삼척복합A 2경기 (09:45)", team1: "양구", team2: "고성", score1: null, score2: null, winner: "", status: "예정" },
       { id: "sb3", match: "삼척복합A 3경기 (10:30)", team1: "정선", team2: "양구", score1: null, score2: null, winner: "", status: "예정" },
       { id: "sb4", match: "삼척복합A 4경기 (11:15)", team1: "강릉", team2: "고성", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "sb5", match: "삼척복합B 1경기 (09:00)", team1: "삼척", team2: "춘천", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "sb6", match: "삼척복합B 2경기 (09:45)", team1: "철원", team2: "인제", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "sb7", match: "삼척복합B 3경기 (10:30)", team1: "삼척", team2: "인제", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "sb8", match: "삼척복합B 4경기 (11:15)", team1: "춘천", team2: "철원", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "sb9", match: "4강전 (13:30)", team1: "복합A 승자", team2: "복합B 승자", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "sb10", match: "결승전 (15:00 - 삼척복합A)", team1: "B조 결승 진출팀1", team2: "B조 결승 진출팀2", score1: null, score2: null, winner: "", status: "예정" }
+      { id: "sb5", match: "에너지마이스터고 1경기 (09:00)", team1: "삼척", team2: "춘천", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "sb6", match: "에너지마이스터고 2경기 (09:45)", team1: "인제", team2: "철원", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "sb7", match: "에너지마이스터고 3경기 (10:30)", team1: "삼척", team2: "인제", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "sb8", match: "에너지마이스터고 4경기 (11:15)", team1: "춘천", team2: "철원", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "sb9", match: "4강 5경기 (13:30 - 삼척복합A)", team1: "복합A 승자", team2: "4강 진출팀", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "sb10", match: "4강 5경기 (13:30 - 에너지마이스터고)", team1: "마이스터고 승자", team2: "4강 진출팀", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "sb11", match: "B조 결승전 (15:00 - 삼척복합A)", team1: "복합A 5경기 승자", team2: "마이스터고 5경기 승자", score1: null, score2: null, winner: "", status: "예정" }
     ]
   },
   badminton: {
     groupA: [
-      { id: "b1", match: "A조 예선 1경기 (10:00)", team1: "속초양양3 (A조)", team2: "홍천 (A조)", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "b2", match: "A조 예선 2경기 (11:00)", team1: "춘천 (A조)", team2: "속초양양2 (A조)", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "b3", match: "A조 4강전 (14:00)", team1: "A조 예선 1위", team2: "A조 예선 4위", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "b4", match: "A조 결승전 (15:00)", team1: "4강 1경기 승자", team2: "4강 2경기 승자", score1: null, score2: null, winner: "", status: "예정" }
+      { id: "ba1", match: "A조 1번 (4코트 10:00)", team1: "A조 ①", team2: "A조 ②", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "ba2", match: "A조 2번 (4코트 10:40)", team1: "A조 ①", team2: "A조 ③", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "ba3", match: "A조 3번 (4코트 11:20)", team1: "A조 ②", team2: "A조 ③", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "ba4", match: "B조 1번 (5코트 10:00)", team1: "B조 ④", team2: "B조 ⑤", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "ba5", match: "B조 2번 (6코트 10:00)", team1: "B조 ⑥", team2: "B조 ⑦", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "ba6", match: "B조 3번 (5코트 10:30)", team1: "B조 ④", team2: "B조 ⑥", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "ba7", match: "B조 4번 (6코트 10:30)", team1: "B조 ⑤", team2: "B조 ⑦", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "ba8", match: "B조 5번 (5코트 11:30)", team1: "B조 ④", team2: "B조 ⑦", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "ba9", match: "B조 6번 (6코트 11:30)", team1: "B조 ⑤", team2: "B조 ⑥", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "ba10", match: "준결승 1경기 (4코트 12:00)", team1: "A 1위", team2: "B 2위", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "ba11", match: "준결승 2경기 (5코트 12:00)", team1: "B 1위", team2: "A 2위", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "ba12", match: "A급 결승전 (5코트 12:30)", team1: "준결승 1경기 승자", team2: "준결승 2경기 승자", score1: null, score2: null, winner: "", status: "예정" }
     ],
     groupB: [
-      { id: "bb1", match: "B조 예선 1경기 (10:00)", team1: "속초양양 (B조)", team2: "동해 (B조)", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "bb2", match: "B조 예선 2경기 (11:00)", team1: "강릉 (B조)", team2: "인제 (B조)", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "bb3", match: "B조 4강전 (14:00)", team1: "B조 예선 1위", team2: "B조 예선 4위", score1: null, score2: null, winner: "", status: "예정" },
-      { id: "bb4", match: "B조 결승전 (15:00)", team1: "4강 1경기 승자", team2: "4강 2경기 승자", score1: null, score2: null, winner: "", status: "예정" }
+      { id: "bb1", match: "A조 1번 (1코트 10:00)", team1: "A조 ①", team2: "A조 ②", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "bb2", match: "A조 2번 (1코트 10:40)", team1: "A조 ①", team2: "A조 ③", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "bb3", match: "A조 3번 (1코트 11:20)", team1: "A조 ②", team2: "A조 ③", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "bb4", match: "B조 1번 (2코트 10:00)", team1: "B조 ④", team2: "B조 ⑤", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "bb5", match: "B조 2번 (3코트 10:00)", team1: "B조 ⑥", team2: "B조 ⑦", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "bb6", match: "B조 3번 (2코트 10:30)", team1: "B조 ④", team2: "B조 ⑥", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "bb7", match: "B조 4번 (3코트 10:30)", team1: "B조 ⑤", team2: "B조 ⑦", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "bb8", match: "B조 5번 (2코트 11:30)", team1: "B조 ④", team2: "B조 ⑦", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "bb9", match: "B조 6번 (3코트 11:30)", team1: "B조 ⑤", team2: "B조 ⑥", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "bb10", match: "준결승 1경기 (1코트 12:00)", team1: "A 1위", team2: "B 2위", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "bb11", match: "준결승 2경기 (2코트 12:00)", team1: "B 1위", team2: "A 2위", score1: null, score2: null, winner: "", status: "예정" },
+      { id: "bb12", match: "B급 결승전 (2코트 12:30)", team1: "준결승 1경기 승자", team2: "준결승 2경기 승자", score1: null, score2: null, winner: "", status: "예정" }
     ]
   }
 };
@@ -229,7 +245,7 @@ function initStore() {
   normalizePlayerData(playerDataStore);
   saveStore(false);
 
-  const savedBrackets = localStorage.getItem("GANGWON_BRACKETS_STORE_V8");
+  const savedBrackets = localStorage.getItem("GANGWON_BRACKETS_STORE_V9");
   if (savedBrackets) {
     try {
       bracketsDataStore = JSON.parse(savedBrackets);
@@ -309,7 +325,7 @@ function saveStore(syncToCloud = true) {
 }
 
 function saveBracketsStore(syncToCloud = true) {
-  localStorage.setItem("GANGWON_BRACKETS_STORE_V8", JSON.stringify(bracketsDataStore));
+  localStorage.setItem("GANGWON_BRACKETS_STORE_V9", JSON.stringify(bracketsDataStore));
   if (syncToCloud && !isInitialAppLoading && typeof pushBracketsToCloud === "function") {
     _debouncedCloudSync("brackets", pushBracketsToCloud, JSON.parse(JSON.stringify(bracketsDataStore)), 500);
   }
@@ -1312,17 +1328,41 @@ function renderBracketsPage() {
   const data = bracketsDataStore[currentBracketSport] || INITIAL_BRACKETS_DATA[currentBracketSport];
   const sportTitle = sportNames[currentBracketSport] || "종목";
 
-  let html = `<div class="bracket-container">`;
+  let groupATitle = `${sportTitle} - A조 대진표`;
+  let groupBTitle = `${sportTitle} - B조 대진표`;
+
+  if (currentBracketSport === "soccer") {
+    groupATitle = "축구 A조 (강원대 대운동장 & 삼척복합C)";
+    groupBTitle = "축구 B조 (삼척복합A & 한국에너지마이스터고)";
+  } else if (currentBracketSport === "badminton") {
+    groupATitle = "배드민턴 A급 (진주초 체육관 4·5·6코트)";
+    groupBTitle = "배드민턴 B급 (진주초 체육관 1·2·3코트)";
+  }
+
+  let html = `
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; padding:12px 16px; background:rgba(0,102,204,0.04); border:1px solid rgba(0,102,204,0.15); border-radius:var(--radius-md);">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:16px;">✏️</span>
+        <span style="font-size:13px; color:var(--color-ink); font-weight:600;">
+          대진표의 <strong>[경기 시간/구장]</strong>, <strong>[진출팀]</strong>, <strong>[점수]</strong>를 클릭하면 화면에서 즉시 수정 및 자동 저장됩니다.
+        </span>
+      </div>
+      <button type="button" class="btn-utility" onclick="resetCurrentSportBracketToOfficial()" style="font-size:11.5px; font-weight:600; padding:6px 12px; background:#ffffff; color:var(--color-primary); border-color:rgba(0,102,204,0.25);" title="현재 종목의 대진표를 최신 공식 일정으로 되돌립니다">
+        🔄 최신 공식 일정으로 초기화
+      </button>
+    </div>
+    <div class="bracket-container">
+  `;
 
   // Group A Bracket Card
   html += `
     <div class="bracket-group-card">
       <div class="bracket-group-header">
-        <h3 class="display-md" style="font-size:18px; margin:0;">${sportTitle} - A조 대진표</h3>
-        <span style="font-size:12px; color:var(--color-primary); font-weight:600;">✏️ 진출팀 및 스코어 직접 수정 가능</span>
+        <h3 class="display-md" style="font-size:17px; margin:0;">${groupATitle}</h3>
+        <span style="font-size:11.5px; color:var(--color-primary); font-weight:600;">경기 시간/구장 직접 수정 가능</span>
       </div>
       <div class="match-grid">
-        ${data.groupA.map(m => renderMatchCardHtml(m)).join("")}
+        ${(data.groupA || []).map(m => renderMatchCardHtml(m)).join("")}
       </div>
     </div>
   `;
@@ -1331,11 +1371,11 @@ function renderBracketsPage() {
   html += `
     <div class="bracket-group-card">
       <div class="bracket-group-header">
-        <h3 class="display-md" style="font-size:18px; margin:0;">${sportTitle} - B조 대진표</h3>
-        <span style="font-size:12px; color:var(--color-primary); font-weight:600;">✏️ 진출팀 및 스코어 직접 수정 가능</span>
+        <h3 class="display-md" style="font-size:17px; margin:0;">${groupBTitle}</h3>
+        <span style="font-size:11.5px; color:var(--color-primary); font-weight:600;">경기 시간/구장 직접 수정 가능</span>
       </div>
       <div class="match-grid">
-        ${data.groupB.map(m => renderMatchCardHtml(m)).join("")}
+        ${(data.groupB || []).map(m => renderMatchCardHtml(m)).join("")}
       </div>
     </div>
   `;
@@ -1352,9 +1392,15 @@ function renderMatchCardHtml(m) {
 
   return `
     <div class="match-card">
-      <div class="match-header">
-        <span>${escapeHtml(m.match)}</span>
-        <span style="font-weight:600; color:${isFinished ? 'var(--color-success)' : 'var(--color-ink-light)'};">
+      <div class="match-header" style="gap:6px;">
+        <input type="text"
+          class="match-info-direct-input"
+          value="${escapeHtml(m.match || '')}"
+          placeholder="경기 시간 및 구장 입력"
+          title="클릭하여 경기 시간 및 구장 직접 수정"
+          onkeydown="if(event.key==='Enter') this.blur();"
+          onchange="updateMatchInfoDirect('${m.id}', this.value)">
+        <span style="font-weight:600; font-size:11px; white-space:nowrap; color:${isFinished ? 'var(--color-success)' : 'var(--color-ink-light)'};">
           ${isFinished ? (m.winner ? `승: ${escapeHtml(m.winner)}` : '경기 종료') : '경기 예정'}
         </span>
       </div>
@@ -1396,6 +1442,34 @@ function renderMatchCardHtml(m) {
       </div>
     </div>
   `;
+}
+
+function updateMatchInfoDirect(matchId, value) {
+  const sportData = bracketsDataStore[currentBracketSport];
+  if (!sportData) return;
+
+  let match = (sportData.groupA || []).find(m => m.id === matchId) || (sportData.groupB || []).find(m => m.id === matchId);
+  if (!match) return;
+
+  match.match = value.trim();
+  saveBracketsStore();
+  if (typeof showToast === "function") {
+    showToast("경기 일정이 업데이트되었습니다.");
+  }
+}
+
+function resetCurrentSportBracketToOfficial() {
+  const sportNames = { jokgu: "족구", soccer: "축구", badminton: "배드민턴" };
+  const title = sportNames[currentBracketSport] || "종목";
+  if (!confirm(`[${title}] 대진표를 최신 공식 일정 기본값으로 초기화하시겠습니까?\n(참가 선수단 및 등록 데이터는 전혀 영향받지 않고 보존됩니다)`)) {
+    return;
+  }
+  bracketsDataStore[currentBracketSport] = JSON.parse(JSON.stringify(INITIAL_BRACKETS_DATA[currentBracketSport]));
+  saveBracketsStore();
+  renderBracketsPage();
+  if (typeof showToast === "function") {
+    showToast(`${title} 대진표가 최신 공식 일정으로 초기화되었습니다.`);
+  }
 }
 
 function updateMatchTeamDirect(matchId, teamIndex, value) {
